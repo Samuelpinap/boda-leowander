@@ -29,9 +29,65 @@ const cormorant = Cormorant_Garamond({
 })
 
 export const metadata: Metadata = {
-  title: "Jane & Arthur - Wedding Invitation",
-  description: "Join us as we celebrate our love story",
+  title: "Leowander & Sarah - Invitación de Boda",
+  description: "Nos complace invitarte a celebrar nuestro amor el 29 de Noviembre, 2025 en Santiago, República Dominicana",
   generator: "v0.dev",
+  keywords: ["boda", "wedding", "Leowander", "Sarah", "invitación", "Santiago", "República Dominicana", "2025"],
+  authors: [{ name: "Leowander & Sarah" }],
+  creator: "Leowander & Sarah",
+  publisher: "Leowander & Sarah",
+  metadataBase: new URL('https://boda-leowander.vercel.app'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'es_ES',
+    url: 'https://boda-leowander.vercel.app',
+    siteName: 'Leowander & Sarah - Boda',
+    title: 'Leowander & Sarah - Invitación de Boda',
+    description: 'Nos complace invitarte a celebrar nuestro amor el 29 de Noviembre, 2025 en Santiago, República Dominicana',
+    images: [
+      {
+        url: '/images/hero-couple.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Leowander & Sarah - Invitación de Boda',
+        type: 'image/jpeg',
+      },
+      {
+        url: '/images/hero-couple.jpg',
+        width: 1920,
+        height: 1080,
+        alt: 'Leowander & Sarah - Wedding Invitation',
+        type: 'image/jpeg',
+      }
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@leowander_sarah', // Replace with actual Twitter handle if exists
+    creator: '@leowander_sarah', // Replace with actual Twitter handle if exists
+    title: 'Leowander & Sarah - Invitación de Boda',
+    description: 'Nos complace invitarte a celebrar nuestro amor el 29 de Noviembre, 2025 en Santiago, República Dominicana',
+    images: ['/images/hero-couple.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    // Add verification codes if needed
+    // google: 'verification-code',
+    // yandex: 'verification-code',
+  }
 }
 
 export default function RootLayout({
@@ -49,6 +105,42 @@ html {
   --font-mono: ${GeistMono.variable};
 }
         `}</style>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Event",
+              "name": "Boda de Leowander & Sarah",
+              "description": "Celebración de la boda de Leowander y Sarah",
+              "startDate": "2025-11-29T15:00:00-04:00",
+              "endDate": "2025-11-30T02:00:00-04:00",
+              "eventStatus": "https://schema.org/EventScheduled",
+              "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+              "location": {
+                "@type": "Place",
+                "name": "Santiago, República Dominicana",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Santiago",
+                  "addressCountry": "DO"
+                }
+              },
+              "organizer": [
+                {
+                  "@type": "Person",
+                  "name": "Leowander"
+                },
+                {
+                  "@type": "Person", 
+                  "name": "Sarah"
+                }
+              ],
+              "image": "https://boda-leowander.vercel.app/images/hero-couple.jpg",
+              "url": "https://boda-leowander.vercel.app"
+            })
+          }}
+        />
       </head>
       <body className={`${playfair.variable} ${dancing.variable} ${greatVibes.variable} ${cormorant.variable} bg-background text-foreground`}>{children}</body>
     </html>

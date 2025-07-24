@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import type { Metadata } from "next"
 
 import { useState, useEffect, Suspense } from "react"
 import Image from "next/image"
@@ -9,6 +10,51 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import SearchParamsHandler from "@/components/SearchParamsHandler"
+
+// Generate dynamic metadata for personalized invites
+export async function generateMetadata({ searchParams }: { searchParams: { invite?: string; g?: string } }): Promise<Metadata> {
+  const inviteParam = searchParams.invite
+  const genderParam = searchParams.g
+  
+  if (inviteParam) {
+    const decodedName = decodeURIComponent(inviteParam.replace(/\+/g, ' '))
+    const capitalizedName = decodedName
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ')
+    
+    const genderTitle = genderParam === 'a' ? 'Invitada' : genderParam === 'o' ? 'Invitado' : 'Invitado/a'
+    const genderGreeting = genderParam === 'a' ? 'invitada' : genderParam === 'o' ? 'invitado' : 'invitado/a'
+    
+    return {
+      title: `${capitalizedName} - ${genderTitle} a la Boda de Leowander & Sarah`,
+      description: `${capitalizedName}, estás ${genderGreeting} a celebrar el amor de Leowander & Sarah el 29 de Noviembre, 2025 en Santiago, República Dominicana`,
+      openGraph: {
+        title: `${capitalizedName} - ${genderTitle} a la Boda de Leowander & Sarah`,
+        description: `${capitalizedName}, estás ${genderGreeting} a celebrar el amor de Leowander & Sarah el 29 de Noviembre, 2025 en Santiago, República Dominicana`,
+        images: [
+          {
+            url: '/images/hero-couple.jpg',
+            width: 1200,
+            height: 630,
+            alt: `Invitación personal para ${capitalizedName} - Boda Leowander & Sarah`,
+          }
+        ],
+      },
+      twitter: {
+        title: `${capitalizedName} - ${genderTitle} a la Boda de Leowander & Sarah`,
+        description: `${capitalizedName}, estás ${genderGreeting} a celebrar el amor de Leowander & Sarah el 29 de Noviembre, 2025`,
+        images: ['/images/hero-couple.jpg'],
+      },
+    }
+  }
+  
+  // Default metadata (fallback)
+  return {
+    title: "Leowander & Sarah - Invitación de Boda",
+    description: "Nos complace invitarte a celebrar nuestro amor el 29 de Noviembre, 2025 en Santiago, República Dominicana",
+  }
+}
 
 function WeddingInvitationContent() {
   const [invitationData, setInvitationData] = useState({
@@ -78,6 +124,16 @@ function WeddingInvitationContent() {
 
     return () => clearInterval(timer)
   }, [])
+
+  // Update document title based on gender parameter
+  useEffect(() => {
+    if (personalizedInvite.isPersonalized) {
+      const genderTitle = personalizedInvite.gender === 'a' ? 'Invitada' : personalizedInvite.gender === 'o' ? 'Invitado' : 'Invitado/a'
+      document.title = `${personalizedInvite.name} - ${genderTitle} a la Boda de Leowander & Sarah`
+    } else {
+      document.title = "Leowander & Sarah - Invitación de Boda"
+    }
+  }, [personalizedInvite])
 
   // Handle scroll detection for header styling
   useEffect(() => {
@@ -821,7 +877,7 @@ function WeddingInvitationContent() {
               {invitationData.isValid ? (
                 <div className="mb-6 p-4 bg-wedding-primary/10 rounded-lg border border-wedding-accent/20">
                   <p className="text-wedding-primary font-cormorant text-lg">
-                    ¡Hola! Has sido invitado/a por <span className="font-semibold capitalize">{invitationData.invitedBy}</span>
+                    ¡Hola! Has sido invitad{personalizedInvite.gender === 'a' ? 'a' : personalizedInvite.gender === 'o' ? 'o' : 'o/a'} por <span className="font-semibold capitalize">{invitationData.invitedBy}</span>
                   </p>
                   <p className="text-wedding-blush font-cormorant text-sm mt-1">
                     Invitación para {invitationData.guestCount} persona{invitationData.guestCount > 1 ? 's' : ''}
