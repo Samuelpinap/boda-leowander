@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import "./globals.css"
-import { Playfair_Display, Dancing_Script } from "next/font/google"
+import { Playfair_Display, Dancing_Script, Great_Vibes, Cormorant_Garamond } from "next/font/google"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -16,9 +16,21 @@ const dancing = Dancing_Script({
   variable: "--font-dancing",
 })
 
+const greatVibes = Great_Vibes({
+  weight: ["400"],
+  subsets: ["latin"],
+  variable: "--font-great-vibes",
+})
+
+const cormorant = Cormorant_Garamond({
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+})
+
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
+  title: "Jane & Arthur - Wedding Invitation",
+  description: "Join us as we celebrate our love story",
   generator: "v0.dev",
 }
 
@@ -38,7 +50,7 @@ html {
 }
         `}</style>
       </head>
-      <body className={`${playfair.variable} ${dancing.variable} bg-background text-foreground`}>{children}</body>
+      <body className={`${playfair.variable} ${dancing.variable} ${greatVibes.variable} ${cormorant.variable} bg-background text-foreground`}>{children}</body>
     </html>
   )
 }
