@@ -2,17 +2,15 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
+import { useState, useEffect, Suspense } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
+import SearchParamsHandler from "@/components/SearchParamsHandler"
 
-export default function WeddingInvitation() {
-  const searchParams = useSearchParams()
-  
+function WeddingInvitationContent() {
   const [invitationData, setInvitationData] = useState({
     invitedBy: "",
     guestCount: 1,
@@ -42,77 +40,22 @@ export default function WeddingInvitation() {
 
   const [isScrolled, setIsScrolled] = useState(false)
 
-  // Parse invitation from URL parameters
-  useEffect(() => {
-    const parseInvitation = () => {
-      const params = Array.from(searchParams.entries())
-      let foundValidInvitation = false
-      
-      // Check for personalized invite parameter first
-      const inviteParam = searchParams.get('invite')
-      const genderParam = searchParams.get('g') // 'a' for female, 'o' for male
-      
-      if (inviteParam) {
-        // Replace + with spaces and decode
-        const decodedName = decodeURIComponent(inviteParam.replace(/\+/g, ' '))
-        // Capitalize each word
-        const capitalizedName = decodedName
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join(' ')
-        
-        setPersonalizedInvite({
-          name: capitalizedName,
-          gender: genderParam === 'a' || genderParam === 'o' ? genderParam : '',
-          isPersonalized: true
-        })
-      }
-      
-      for (const [key, value] of params) {
-        // Look for pattern like "leowander-2" or "maria-5"
-        const match = key.match(/^([a-zA-Z]+)-(\d+)$/)
-        if (match) {
-          const [, inviterName, guestCountStr] = match
-          const guestCount = parseInt(guestCountStr, 10)
-          
-          // Validate guest count (1-5)
-          if (guestCount >= 1 && guestCount <= 5) {
-            setInvitationData({
-              invitedBy: inviterName,
-              guestCount: guestCount,
-              isValid: true
-            })
-            
-            setFormData(prev => ({
-              ...prev,
-              guestCount: guestCount,
-              names: Array(guestCount).fill("")
-            }))
-            
-            foundValidInvitation = true
-            break
-          }
-        }
-      }
-      
-      if (!foundValidInvitation) {
-        // No valid invitation found - set default
-        setInvitationData({
-          invitedBy: "",
-          guestCount: 1,
-          isValid: false
-        })
-        
-        setFormData(prev => ({
-          ...prev,
-          guestCount: 1,
-          names: [""]
-        }))
-      }
-    }
+  // Handlers for SearchParamsHandler
+  const handleInvitationUpdate = (data: { invitedBy: string; guestCount: number; isValid: boolean }) => {
+    setInvitationData(data)
+  }
 
-    parseInvitation()
-  }, [searchParams])
+  const handlePersonalizedInviteUpdate = (data: { name: string; gender: string; isPersonalized: boolean }) => {
+    setPersonalizedInvite(data)
+  }
+
+  const handleFormDataUpdate = (guestCount: number) => {
+    setFormData(prev => ({
+      ...prev,
+      guestCount: guestCount,
+      names: Array(guestCount).fill("")
+    }))
+  }
 
   useEffect(() => {
     const weddingDate = new Date('2025-11-29T18:00:00').getTime()
@@ -238,6 +181,11 @@ export default function WeddingInvitation() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
+      <SearchParamsHandler
+        onInvitationUpdate={handleInvitationUpdate}
+        onPersonalizedInviteUpdate={handlePersonalizedInviteUpdate}
+        onFormDataUpdate={handleFormDataUpdate}
+      />
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out">
         <div className={`transition-all duration-500 ease-in-out ${
@@ -1089,5 +1037,18 @@ export default function WeddingInvitation() {
         </div>
       </footer>
     </div>
+  )
+}
+
+export default function WeddingInvitation() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="text-6xl font-great-vibes text-wedding-primary mb-4">Loading...</div>
+        <div className="text-wedding-accent font-cormorant">Preparando tu invitación</div>
+      </div>
+    </div>}>
+      <WeddingInvitationContent />
+    </Suspense>
   )
 }
