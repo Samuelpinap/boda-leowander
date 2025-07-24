@@ -19,6 +19,13 @@ const config: Config = {
   			'cormorant': ['var(--font-cormorant)'],
   		},
   		colors: {
+  			'wedding': {
+  				'primary': '#C9795E',
+  				'secondary': '#D9856A',
+  				'accent': '#D77D59',
+  				'sage': '#808E69',
+  				'blush': '#C88475',
+  			},
   			'rose': {
   				50: '#fdf2f8',
   				100: '#fce7f3',

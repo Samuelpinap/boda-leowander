@@ -74,6 +74,15 @@ html {
   animation: sparkle 2s ease-in-out infinite;
 }
 
+/* Wedding Color Palette */
+:root {
+  --wedding-primary: #C9795E;    /* Warm coral */
+  --wedding-secondary: #D9856A;  /* Light coral */
+  --wedding-accent: #D77D59;     /* Peachy coral */
+  --wedding-sage: #808E69;       /* Sage green */
+  --wedding-blush: #C88475;      /* Dusty rose */
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -84,12 +93,12 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #f472b6;
+  background: var(--wedding-primary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ec4899;
+  background: var(--wedding-accent);
 }
 
 /* Hover effects */
