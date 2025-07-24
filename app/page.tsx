@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,11 +11,26 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 
 export default function WeddingInvitation() {
-  const [formData, setFormData] = useState({
+  const searchParams = useSearchParams()
+  
+  const [invitationData, setInvitationData] = useState({
+    invitedBy: "",
+    guestCount: 1,
+    isValid: false
+  })
+
+  const [personalizedInvite, setPersonalizedInvite] = useState({
     name: "",
+    gender: "", // 'a' for female, 'o' for male
+    isPersonalized: false
+  })
+
+  const [formData, setFormData] = useState({
+    names: [""], // Array of names for each guest
     email: "",
     response: "",
     message: "",
+    guestCount: 1,
   })
 
   const [timeLeft, setTimeLeft] = useState({
@@ -23,6 +39,80 @@ export default function WeddingInvitation() {
     minutes: 0,
     seconds: 0
   })
+
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  // Parse invitation from URL parameters
+  useEffect(() => {
+    const parseInvitation = () => {
+      const params = Array.from(searchParams.entries())
+      let foundValidInvitation = false
+      
+      // Check for personalized invite parameter first
+      const inviteParam = searchParams.get('invite')
+      const genderParam = searchParams.get('g') // 'a' for female, 'o' for male
+      
+      if (inviteParam) {
+        // Replace + with spaces and decode
+        const decodedName = decodeURIComponent(inviteParam.replace(/\+/g, ' '))
+        // Capitalize each word
+        const capitalizedName = decodedName
+          .split(' ')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ')
+        
+        setPersonalizedInvite({
+          name: capitalizedName,
+          gender: genderParam === 'a' || genderParam === 'o' ? genderParam : '',
+          isPersonalized: true
+        })
+      }
+      
+      for (const [key, value] of params) {
+        // Look for pattern like "leowander-2" or "maria-5"
+        const match = key.match(/^([a-zA-Z]+)-(\d+)$/)
+        if (match) {
+          const [, inviterName, guestCountStr] = match
+          const guestCount = parseInt(guestCountStr, 10)
+          
+          // Validate guest count (1-5)
+          if (guestCount >= 1 && guestCount <= 5) {
+            setInvitationData({
+              invitedBy: inviterName,
+              guestCount: guestCount,
+              isValid: true
+            })
+            
+            setFormData(prev => ({
+              ...prev,
+              guestCount: guestCount,
+              names: Array(guestCount).fill("")
+            }))
+            
+            foundValidInvitation = true
+            break
+          }
+        }
+      }
+      
+      if (!foundValidInvitation) {
+        // No valid invitation found - set default
+        setInvitationData({
+          invitedBy: "",
+          guestCount: 1,
+          isValid: false
+        })
+        
+        setFormData(prev => ({
+          ...prev,
+          guestCount: 1,
+          names: [""]
+        }))
+      }
+    }
+
+    parseInvitation()
+  }, [searchParams])
 
   useEffect(() => {
     const weddingDate = new Date('2025-11-29T18:00:00').getTime()
@@ -46,47 +136,164 @@ export default function WeddingInvitation() {
     return () => clearInterval(timer)
   }, [])
 
+  // Handle scroll detection for header styling
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      const shouldBeScrolled = scrollTop > 100
+      
+      if (shouldBeScrolled !== isScrolled) {
+        setIsScrolled(shouldBeScrolled)
+      }
+    }
+
+    // Add event listener
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    
+    // Check initial scroll position
+    handleScroll()
+
+    // Cleanup
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [isScrolled])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("RSVP submitted:", formData)
-    // Handle form submission here
+    
+    // Validate all names are filled
+    const emptyNames = formData.names.some((name, index) => !name.trim())
+    if (emptyNames) {
+      alert("Por favor, completa todos los nombres de los asistentes.")
+      return
+    }
+    
+    const submitData = {
+      email: formData.email,
+      names: formData.names.filter(name => name.trim()), // Remove empty names
+      response: formData.response,
+      message: formData.message,
+      guestCount: formData.guestCount,
+      invitedBy: invitationData.invitedBy,
+      invitationValid: invitationData.isValid,
+      personalizedInvite: personalizedInvite.isPersonalized ? {
+        name: personalizedInvite.name,
+        gender: personalizedInvite.gender
+      } : null,
+      timestamp: new Date().toISOString(),
+    }
+    
+    console.log("RSVP submitted:", submitData)
+    
+    // Here you would normally send to your database
+    // Example API call:
+    // fetch('/api/rsvp', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(submitData)
+    // })
+    
+    const guestList = formData.names.filter(name => name.trim()).join(", ")
+    alert(`¡Gracias por confirmar tu asistencia!\n\nAsistentes: ${guestList}`)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    
+    // Validate guest count doesn't exceed invitation limit
+    if (name === 'guestCount') {
+      const count = parseInt(value, 10)
+      if (invitationData.isValid && count > invitationData.guestCount) {
+        return // Don't update if exceeds limit
+      }
+      
+      // Update names array when guest count changes
+      const newNames = Array(count).fill("")
+      // Preserve existing names if reducing count
+      for (let i = 0; i < Math.min(count, formData.names.length); i++) {
+        newNames[i] = formData.names[i] || ""
+      }
+      
+      setFormData({
+        ...formData,
+        guestCount: count,
+        names: newNames
+      })
+      return
+    }
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
+    })
+  }
+
+  const handleNameChange = (index: number, value: string) => {
+    const newNames = [...formData.names]
+    newNames[index] = value
+    setFormData({
+      ...formData,
+      names: newNames
     })
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50">
-        <div className="container mx-auto px-6 py-6">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="text-center mb-2">
-              <div className="text-sm font-cormorant text-wedding-primary tracking-[0.3em] mb-2">NOS COMPLACE INVITARLE A NUESTRA BODA</div>
-              <div className="text-4xl font-great-vibes text-wedding-primary tracking-wide">
-                Leowander <span className="text-wedding-accent font-dancing text-5xl mx-3">&</span> Sarah
+      <nav className="fixed top-0 w-full z-50 transition-all duration-500 ease-in-out">
+        <div className={`transition-all duration-500 ease-in-out ${
+          isScrolled 
+            ? 'bg-white/90 backdrop-blur-sm shadow-lg border-b border-wedding-accent/20' 
+            : 'bg-transparent'
+        }`}>
+          <div className="container mx-auto px-6 py-4">
+            <div className="flex flex-col items-center space-y-4">
+              <div className="text-center mb-2">
+                <div className={`text-sm font-cormorant tracking-[0.3em] mb-2 transition-colors duration-500 ${
+                  isScrolled ? 'text-wedding-primary' : 'text-white/90'
+                }`}>
+                  NOS COMPLACE INVITARLE A NUESTRA BODA
+                </div>
+                <div className={`text-3xl md:text-4xl font-great-vibes tracking-wide transition-colors duration-500 ${
+                  isScrolled ? 'text-wedding-primary' : 'text-white'
+                }`}>
+                  Leowander <span className={`font-dancing text-4xl md:text-5xl mx-3 transition-colors duration-500 ${
+                    isScrolled ? 'text-wedding-accent' : 'text-white/80'
+                  }`}>&</span> Sarah
+                </div>
               </div>
-            </div>
-            <div className="flex items-center text-sm tracking-wider text-wedding-primary font-cormorant font-bold">
-              <a href="#about" className="hover:text-wedding-sage transition-all duration-300 px-6">
-                NUESTRA HISTORIA
-              </a>
-              <div className="h-px bg-wedding-accent w-8 mx-2"></div>
-              <a href="#invitation" className="hover:text-wedding-sage transition-all duration-300 px-6">
-                CEREMONIA
-              </a>
-              <div className="h-px bg-wedding-accent w-8 mx-2"></div>
-              <a href="#location" className="hover:text-wedding-sage transition-all duration-300 px-6">
-                RECEPCIÓN
-              </a>
-              <div className="h-px bg-wedding-accent w-8 mx-2"></div>
-              <a href="#rsvp" className="hover:text-wedding-sage transition-all duration-300 px-6">
-                CONFIRMAR
-              </a>
+              <div className={`flex items-center text-xs md:text-sm tracking-wider font-cormorant font-bold flex-wrap justify-center transition-colors duration-500 ${
+                isScrolled ? 'text-wedding-primary' : 'text-white/90'
+              }`}>
+                <a href="#about" className={`transition-all duration-300 px-3 md:px-6 py-1 ${
+                  isScrolled ? 'hover:text-wedding-sage' : 'hover:text-white'
+                }`}>
+                  NUESTRA HISTORIA
+                </a>
+                <div className={`h-px w-6 md:w-8 mx-1 md:mx-2 transition-colors duration-500 ${
+                  isScrolled ? 'bg-wedding-accent' : 'bg-white/60'
+                }`}></div>
+                <a href="#invitation" className={`transition-all duration-300 px-3 md:px-6 py-1 ${
+                  isScrolled ? 'hover:text-wedding-sage' : 'hover:text-white'
+                }`}>
+                  CEREMONIA
+                </a>
+                <div className={`h-px w-6 md:w-8 mx-1 md:mx-2 transition-colors duration-500 ${
+                  isScrolled ? 'bg-wedding-accent' : 'bg-white/60'
+                }`}></div>
+                <a href="#location" className={`transition-all duration-300 px-3 md:px-6 py-1 ${
+                  isScrolled ? 'hover:text-wedding-sage' : 'hover:text-white'
+                }`}>
+                  RECEPCIÓN
+                </a>
+                <div className={`h-px w-6 md:w-8 mx-1 md:mx-2 transition-colors duration-500 ${
+                  isScrolled ? 'bg-wedding-accent' : 'bg-white/60'
+                }`}></div>
+                <a href="#rsvp" className={`transition-all duration-300 px-3 md:px-6 py-1 ${
+                  isScrolled ? 'hover:text-wedding-sage' : 'hover:text-white'
+                }`}>
+                  CONFIRMAR
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -105,7 +312,28 @@ export default function WeddingInvitation() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-amber-900/20 to-black/30"></div>
         </div>
 
-        <div className="relative z-10 text-center text-white px-6 animate-fade-in">
+        <div className={`relative z-10 text-center text-white px-6 animate-fade-in ${personalizedInvite.isPersonalized ? 'pt-32 md:pt-20' : 'pt-20 md:pt-16'}`}>
+          {personalizedInvite.isPersonalized && (
+            <div className="mb-8 animate-slide-up">
+              <div className="bg-white/15 backdrop-blur-sm rounded-2xl border border-white/30 p-6 shadow-2xl animate-welcome-glow">
+                <div className="text-orange-200 text-lg font-cormorant mb-2 tracking-[0.2em] animate-sparkle">
+                  ✨ Especialmente para ti ✨
+                </div>
+                <h2 className="text-3xl md:text-4xl font-great-vibes text-white mb-2 drop-shadow-lg">
+                  ¡Bienvenid{personalizedInvite.gender === 'a' ? 'a' : personalizedInvite.gender === 'o' ? 'o' : 'o/a'}, <span className="text-yellow-200">{personalizedInvite.name}</span>!
+                </h2>
+                <p className="text-orange-100 font-cormorant text-sm md:text-base leading-relaxed">
+                  Nos emociona enormemente tener{personalizedInvite.gender === 'a' ? 'te' : personalizedInvite.gender === 'o' ? 'te' : 'te'} en nuestra celebración de amor
+                </p>
+                <div className="flex justify-center items-center space-x-2 mt-3">
+                  <div className="h-px bg-white/30 w-8"></div>
+                  <div className="text-yellow-200 text-xl">💕</div>
+                  <div className="h-px bg-white/30 w-8"></div>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <div className="mb-6">
             <div className="text-orange-200 text-2xl font-cormorant mb-2 tracking-[0.3em]">✦ TOGETHER FOREVER ✦</div>
           </div>
@@ -257,8 +485,8 @@ export default function WeddingInvitation() {
                   <div className="text-wedding-accent text-4xl mb-4">👰🏻</div>
                   <h3 className="text-2xl font-playfair text-wedding-primary font-semibold">Padres de la Novia</h3>
                   <div className="text-wedding-blush space-y-2 font-cormorant">
-                    <p className="text-lg font-semibold">Carlos Saint-Hilaire</p>
-                    <p className="text-lg font-semibold">María González</p>
+                    <p className="text-lg font-semibold">Ángel Luis Saint-Hilaire Pérez</p>
+                    <p className="text-lg font-semibold">Luisa Virginia Marmolejos González</p>
                   </div>
                   <div className="mt-4 text-wedding-accent">♥</div>
                 </div>
@@ -269,8 +497,8 @@ export default function WeddingInvitation() {
                   <div className="text-wedding-accent text-4xl mb-4">🤵🏻</div>
                   <h3 className="text-2xl font-playfair text-wedding-primary font-semibold">Padres del Novio</h3>
                   <div className="text-wedding-blush space-y-2 font-cormorant">
-                    <p className="text-lg font-semibold">Roberto Piña</p>
-                    <p className="text-lg font-semibold">Ana Rodríguez</p>
+                    <p className="text-lg font-semibold">Leonardo Piña Luciano</p>
+                    <p className="text-lg font-semibold">Ysabel Polanco Sanchez</p>
                   </div>
                   <div className="mt-4 text-wedding-accent">♥</div>
                 </div>
@@ -641,6 +869,27 @@ export default function WeddingInvitation() {
                 <div className="text-wedding-accent text-lg font-cormorant tracking-[0.3em] mb-2">✦ ÚNETE A NUESTRA CELEBRACIÓN ✦</div>
               </div>
               <h2 className="text-4xl md:text-5xl font-great-vibes text-wedding-primary mb-6">Confirmar Asistencia</h2>
+              
+              {invitationData.isValid ? (
+                <div className="mb-6 p-4 bg-wedding-primary/10 rounded-lg border border-wedding-accent/20">
+                  <p className="text-wedding-primary font-cormorant text-lg">
+                    ¡Hola! Has sido invitado/a por <span className="font-semibold capitalize">{invitationData.invitedBy}</span>
+                  </p>
+                  <p className="text-wedding-blush font-cormorant text-sm mt-1">
+                    Invitación para {invitationData.guestCount} persona{invitationData.guestCount > 1 ? 's' : ''}
+                  </p>
+                </div>
+              ) : (
+                <div className="mb-6 p-4 bg-wedding-sage/10 rounded-lg border border-wedding-sage/20">
+                  <p className="text-wedding-sage font-cormorant text-lg">
+                    👋 ¡Bienvenido! Para confirmar tu asistencia, necesitas un enlace de invitación personalizado.
+                  </p>
+                  <p className="text-wedding-blush font-cormorant text-sm mt-1">
+                    Si no tienes uno, por favor contacta a los novios.
+                  </p>
+                </div>
+              )}
+              
               <p className="text-lg text-wedding-blush font-cormorant italic">Tu presencia hará que este día sea aún más especial. Por favor, confirma tu asistencia antes del 15 de Noviembre, 2025.</p>
               <div className="flex justify-center items-center space-x-4 mt-6">
                 <div className="h-px bg-rose-300 w-12"></div>
@@ -651,44 +900,77 @@ export default function WeddingInvitation() {
 
             <Card className="bg-gradient-to-br from-white to-rose-50 shadow-2xl border-2 border-rose-100 p-10 rounded-2xl">
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">Nombre Completo</label>
-                    <Input
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">Correo Electrónico</label>
-                    <Input
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
-                      required
-                    />
-                  </div>
+                {/* Email field */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">Correo Electrónico de Contacto</label>
+                  <Input
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
+                    required
+                  />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">¿Confirmas tu asistencia?</label>
-                  <select
-                    name="response"
-                    value={formData.response}
-                    onChange={handleInputChange}
-                    className="w-full p-3 border border-rose-200 rounded-lg focus:border-rose-400 focus:ring-2 focus:ring-rose-200 focus:outline-none font-cormorant"
-                    required
-                  >
-                    <option value="">Por favor selecciona</option>
-                    <option value="yes">Sí, ahí estaré</option>
-                    <option value="no">Lo siento, no podré asistir</option>
-                  </select>
+                {/* Dynamic name fields */}
+                <div className="space-y-4">
+                  <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">
+                    Nombres de los Asistentes
+                  </label>
+                  {formData.names.map((name, index) => (
+                    <div key={index} className="space-y-2">
+                      <label className="text-xs text-wedding-blush font-cormorant">
+                        {index === 0 ? "Tu nombre completo" : `Acompañante ${index}`}
+                      </label>
+                      <Input
+                        value={name}
+                        onChange={(e) => handleNameChange(index, e.target.value)}
+                        className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
+                        placeholder={index === 0 ? "Tu nombre completo" : `Nombre del acompañante ${index}`}
+                        required
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">¿Confirmas tu asistencia?</label>
+                    <select
+                      name="response"
+                      value={formData.response}
+                      onChange={handleInputChange}
+                      className="w-full p-3 border border-rose-200 rounded-lg focus:border-rose-400 focus:ring-2 focus:ring-rose-200 focus:outline-none font-cormorant"
+                      required
+                    >
+                      <option value="">Por favor selecciona</option>
+                      <option value="yes">Sí, ahí estaré</option>
+                      <option value="no">Lo siento, no podré asistir</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">
+                      Número de personas
+                      {invitationData.isValid && (
+                        <span className="text-xs text-wedding-blush ml-1">(máx. {invitationData.guestCount})</span>
+                      )}
+                    </label>
+                    <select
+                      name="guestCount"
+                      value={formData.guestCount}
+                      onChange={handleInputChange}
+                      className="w-full p-3 border border-rose-200 rounded-lg focus:border-rose-400 focus:ring-2 focus:ring-rose-200 focus:outline-none font-cormorant"
+                      required
+                    >
+                      {Array.from({ length: invitationData.isValid ? invitationData.guestCount : 5 }, (_, i) => i + 1).map(num => (
+                        <option key={num} value={num}>
+                          {num} persona{num > 1 ? 's' : ''}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -705,7 +987,7 @@ export default function WeddingInvitation() {
                 <Button type="submit" className="w-full bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white py-4 text-lg font-cormorant tracking-wide rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                   ♥ Confirmar Asistencia Ahora ♥
                 </Button>
-                <p className="text-sm text-rose-500 text-center mt-4 font-cormorant italic">Por favor, incluye el número de invitados y cualquier restricción alimentaria</p>
+                <p className="text-sm text-rose-500 text-center mt-4 font-cormorant italic">Por favor, incluye los nombres de todos los asistentes y cualquier restricción alimentaria en el mensaje</p>
               </form>
             </Card>
           </div>
