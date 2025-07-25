@@ -346,7 +346,7 @@ function WeddingInvitationContent() {
           )}
           
           <div className="mb-6">
-            <div className="text-orange-200 text-2xl font-cormorant mb-2 tracking-[0.3em]">✦ TOGETHER FOREVER ✦</div>
+            <div className="text-orange-200 text-2xl font-cormorant mb-2 tracking-[0.3em]">✦ JUNTOS PARA SIEMPRE ✦</div>
           </div>
           <h1 className="text-6xl md:text-8xl font-great-vibes mb-6 leading-tight animate-float drop-shadow-2xl">De lo inesperado nació lo eterno</h1>
           <div className="space-y-2">
@@ -624,47 +624,8 @@ function WeddingInvitationContent() {
               </div>
               
               {/* Text Information */}
-              <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto mb-8">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">🤵🏻</div>
-                  <h5 className="text-lg font-playfair text-wedding-primary font-semibold mb-2">ELLOS</h5>
-                  <div className="text-wedding-blush font-cormorant space-y-1">
-                    <p>Traje</p>
-                    <p>Chacabana</p>
-                    <p>Corbatín o corbata</p>
-                  </div>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-6xl mb-4">👰🏻</div>
-                  <h5 className="text-lg font-playfair text-wedding-primary font-semibold mb-2">ELLAS</h5>
-                  <div className="text-wedding-blush font-cormorant space-y-1">
-                    <p>Vestido largo</p>
-                    <p>Tacón grueso</p>
-                    <p>(no de aguja)</p>
-                  </div>
-                </div>
-              </div>
+             
               
-              {/* Suggested Colors */}
-              <Card className="p-6 bg-gradient-to-br from-rose-50 to-white border-2 border-rose-100 max-w-2xl mx-auto mb-6">
-                <h5 className="text-lg font-playfair text-wedding-primary font-semibold mb-4 text-center">COLORES SUGERIDOS</h5>
-                <div className="flex flex-wrap justify-center gap-2 mb-3">
-                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#B8E6E1'}}></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#D4E7A1'}}></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F5E991'}}></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F4C2C2'}}></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F5B895'}}></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F2D7A7'}}></div>
-                </div>
-                <div className="flex flex-wrap justify-center gap-2 mb-3">
-                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#E8E8F5'}}></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#D1D1F0'}}></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#A8C8E8'}}></div>
-                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#7B68EE'}}></div>
-                </div>
-                <p className="text-wedding-blush font-cormorant text-sm text-center">Tonos pasteles y suaves</p>
-              </Card>
 
               {/* What NOT to wear */}
               <Card className="p-6 bg-gradient-to-br from-rose-50 to-white border-2 border-rose-100 max-w-2xl mx-auto mb-6">
@@ -704,12 +665,14 @@ function WeddingInvitationContent() {
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <Card className="p-6 bg-gradient-to-br from-white to-rose-50 border border-rose-100 hover:border-rose-200 transition-all duration-300 hover:shadow-lg">
                   <div className="space-y-3 text-center">
-                    <h4 className="text-lg font-playfair text-wedding-primary font-semibold">Hotel Platino</h4>
+                    <h4 className="text-lg font-playfair text-wedding-primary font-semibold">AC Hotel Santiago de los Caballeros</h4>
                     <div className="text-wedding-blush font-cormorant text-sm">
-                      <p>Av. Juan Pablo Duarte 54</p>
                       <p>Santiago, República Dominicana</p>
                     </div>
-                    <Button className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-1 text-sm font-cormorant">
+                    <Button 
+                      className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-1 text-sm font-cormorant"
+                      onClick={() => window.open('https://maps.app.goo.gl/JDajTzSGEmviyVGs5?g_st=ipc', '_blank')}
+                    >
                       Ver ubicación
                     </Button>
                   </div>
@@ -717,12 +680,14 @@ function WeddingInvitationContent() {
 
                 <Card className="p-6 bg-gradient-to-br from-white to-rose-50 border border-rose-100 hover:border-rose-200 transition-all duration-300 hover:shadow-lg">
                   <div className="space-y-3 text-center">
-                    <h4 className="text-lg font-playfair text-wedding-primary font-semibold">Gran Almirante Hotel</h4>
+                    <h4 className="text-lg font-playfair text-wedding-primary font-semibold">Hotel Santiago, Curio Collection by Hilton</h4>
                     <div className="text-wedding-blush font-cormorant text-sm">
-                      <p>Av. Estrella Sadhalá</p>
                       <p>Santiago, República Dominicana</p>
                     </div>
-                    <Button className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-1 text-sm font-cormorant">
+                    <Button 
+                      className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-1 text-sm font-cormorant"
+                      onClick={() => window.open('https://maps.app.goo.gl/aXz8zv1cZST5zLSJ7?g_st=ipc', '_blank')}
+                    >
                       Ver ubicación
                     </Button>
                   </div>
@@ -730,12 +695,14 @@ function WeddingInvitationContent() {
 
                 <Card className="p-6 bg-gradient-to-br from-white to-rose-50 border border-rose-100 hover:border-rose-200 transition-all duration-300 hover:shadow-lg">
                   <div className="space-y-3 text-center">
-                    <h4 className="text-lg font-playfair text-wedding-primary font-semibold">Hodelpa Centro Plaza</h4>
+                    <h4 className="text-lg font-playfair text-wedding-primary font-semibold">Nohian Collection Hotels</h4>
                     <div className="text-wedding-blush font-cormorant text-sm">
-                      <p>Calle Mella 54</p>
                       <p>Santiago, República Dominicana</p>
                     </div>
-                    <Button className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-1 text-sm font-cormorant">
+                    <Button 
+                      className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-1 text-sm font-cormorant"
+                      onClick={() => window.open('https://maps.app.goo.gl/b3pCsBmHxAAp7bfV8?g_st=ipc', '_blank')}
+                    >
                       Ver ubicación
                     </Button>
                   </div>
@@ -743,12 +710,29 @@ function WeddingInvitationContent() {
 
                 <Card className="p-6 bg-gradient-to-br from-white to-rose-50 border border-rose-100 hover:border-rose-200 transition-all duration-300 hover:shadow-lg">
                   <div className="space-y-3 text-center">
-                    <h4 className="text-lg font-playfair text-wedding-primary font-semibold">Hotel Mercedes</h4>
+                    <h4 className="text-lg font-playfair text-wedding-primary font-semibold">Hodelpa Gran Almirante</h4>
                     <div className="text-wedding-blush font-cormorant text-sm">
-                      <p>Av. Salvador Estrella Sadhalá</p>
                       <p>Santiago, República Dominicana</p>
                     </div>
-                    <Button className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-1 text-sm font-cormorant">
+                    <Button 
+                      className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-1 text-sm font-cormorant"
+                      onClick={() => window.open('https://maps.app.goo.gl/8d4UnE8XLymtYi6b9?g_st=ipc', '_blank')}
+                    >
+                      Ver ubicación
+                    </Button>
+                  </div>
+                </Card>
+
+                <Card className="p-6 bg-gradient-to-br from-white to-rose-50 border border-rose-100 hover:border-rose-200 transition-all duration-300 hover:shadow-lg">
+                  <div className="space-y-3 text-center">
+                    <h4 className="text-lg font-playfair text-wedding-primary font-semibold">Hotel Los Jardines</h4>
+                    <div className="text-wedding-blush font-cormorant text-sm">
+                      <p>Santiago, República Dominicana</p>
+                    </div>
+                    <Button 
+                      className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-1 text-sm font-cormorant"
+                      onClick={() => window.open('https://maps.app.goo.gl/87r5fcYsr5TybJ1n8?g_st=ipc', '_blank')}
+                    >
                       Ver ubicación
                     </Button>
                   </div>
@@ -759,67 +743,10 @@ function WeddingInvitationContent() {
         </div>
       </section>
 
-      {/* Itinerary Section */}
-      <section className="py-20 bg-gradient-to-br from-rose-800 via-rose-700 to-rose-600 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 text-8xl text-white font-great-vibes">♡</div>
-          <div className="absolute bottom-10 right-10 text-8xl text-white font-great-vibes">♡</div>
-          <div className="absolute top-1/2 left-1/2 text-6xl text-white font-great-vibes transform -translate-x-1/2 -translate-y-1/2">❦</div>
-        </div>
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-8">
-              <div className="text-rose-200 text-lg font-cormorant tracking-[0.3em] mb-2">✦ CRONOGRAMA DEL DÍA ✦</div>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-great-vibes text-white mb-12">Itinerario</h2>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-rose-200 hover:border-rose-300 transition-all duration-300 hover:shadow-xl">
-                <div className="space-y-4 text-center">
-                  <div className="text-wedding-blush text-5xl mb-4">⛪</div>
-                  <h3 className="text-xl font-playfair text-wedding-primary font-semibold">Ceremonia</h3>
-                  <div className="text-wedding-blush font-cormorant">
-                    <p className="text-2xl font-bold">3:00 PM</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-rose-200 hover:border-rose-300 transition-all duration-300 hover:shadow-xl">
-                <div className="space-y-4 text-center">
-                  <div className="text-wedding-blush text-5xl mb-4">📸</div>
-                  <h3 className="text-xl font-playfair text-wedding-primary font-semibold">Fotos</h3>
-                  <div className="text-wedding-blush font-cormorant">
-                    <p className="text-2xl font-bold">4:30 PM</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-rose-200 hover:border-rose-300 transition-all duration-300 hover:shadow-xl">
-                <div className="space-y-4 text-center">
-                  <div className="text-wedding-blush text-5xl mb-4">🥂</div>
-                  <h3 className="text-xl font-playfair text-wedding-primary font-semibold">Recepción</h3>
-                  <div className="text-wedding-blush font-cormorant">
-                    <p className="text-2xl font-bold">5:00 PM</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-6 bg-white/90 backdrop-blur-sm border-2 border-rose-200 hover:border-rose-300 transition-all duration-300 hover:shadow-xl">
-                <div className="space-y-4 text-center">
-                  <div className="text-wedding-blush text-5xl mb-4">💃</div>
-                  <h3 className="text-xl font-playfair text-wedding-primary font-semibold">Fiesta</h3>
-                  <div className="text-wedding-blush font-cormorant">
-                    <p className="text-2xl font-bold">9:00 PM</p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
+     
 
       {/* Mesa de Regalos Section */}
-      <section className="py-20 bg-gradient-to-br from-rose-600 via-rose-500 to-rose-400 relative overflow-hidden">
+      <section className="py-20 relative overflow-hidden" style={{background: 'linear-gradient(to bottom right, #7DA080, #8AAA8D, #97B49A)'}}>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 text-9xl text-white font-great-vibes">♡</div>
           <div className="absolute bottom-20 right-20 text-9xl text-white font-great-vibes">♡</div>
@@ -827,7 +754,7 @@ function WeddingInvitationContent() {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
             <div className="mb-8">
-              <div className="text-rose-100 text-lg font-cormorant tracking-[0.3em] mb-2">✦ MESA DE REGALOS ✦</div>
+              <div className="text-green-100 text-lg font-cormorant tracking-[0.3em] mb-2">✦ MESA DE REGALOS ✦</div>
             </div>
             <h2 className="text-4xl md:text-5xl font-great-vibes text-white mb-12">Mesa de Regalos</h2>
             
@@ -836,24 +763,39 @@ function WeddingInvitationContent() {
               <Card className="p-8 bg-white/90 backdrop-blur-sm border-2 border-white/50 hover:shadow-xl transition-all duration-300">
                 <div className="space-y-4 text-center">
                   <div className="text-6xl mb-4">📦</div>
-                  <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">Amazon</h3>
+                  <h3 className="text-2xl font-playfair font-semibold mb-4" style={{color: '#7DA080'}}>Amazon</h3>
                   <p className="text-wedding-blush font-cormorant text-sm mb-6 leading-relaxed">
                     Encuentra nuestra lista de regalos en Amazon con todo lo que necesitamos para nuestro nuevo hogar
                   </p>
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 font-cormorant text-lg rounded-lg shadow-lg">
+                  <Button 
+                    className="text-white px-6 py-3 font-cormorant text-lg rounded-lg shadow-lg transition-all duration-300"
+                    style={{backgroundColor: '#7DA080'}} 
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#6B9570'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#7DA080'}
+                    onClick={() => window.open('https://www.amazon.com/wedding/registry/2VQBEDH207ZZ8', '_blank')}
+                  >
                     Ir a mesa de regalos
                   </Button>
                 </div>
               </Card>
 
-              {/* Lluvia de Sobres */}
+              {/* Casa Cuesta */}
               <Card className="p-8 bg-white/90 backdrop-blur-sm border-2 border-white/50 hover:shadow-xl transition-all duration-300">
                 <div className="space-y-4 text-center">
-                  <div className="text-6xl mb-4">💌</div>
-                  <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">Lluvia de Sobres</h3>
-                  <p className="text-wedding-blush font-cormorant text-sm mb-6 leading-relaxed italic">
-                    "La lluvia de sobres, es la tradición de regalar dinero en efectivo a los novios en un sobre el día del evento"
+                  <div className="text-6xl mb-4">🎁</div>
+                  <h3 className="text-2xl font-playfair font-semibold mb-4" style={{color: '#7DA080'}}>Casa Cuesta</h3>
+                  <p className="text-wedding-blush font-cormorant text-sm mb-6 leading-relaxed">
+                    Encuentra nuestra lista de regalos en Casa Cuesta con productos especiales para nuestro hogar
                   </p>
+                  <Button 
+                    className="text-white px-6 py-3 font-cormorant text-lg rounded-lg shadow-lg transition-all duration-300"
+                    style={{backgroundColor: '#7DA080'}} 
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#6B9570'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#7DA080'}
+                    onClick={() => window.open('https://listaderegalos.casacuesta.com/Event/Leowander-Sarah', '_blank')}
+                  >
+                    Ver lista de regalos
+                  </Button>
                 </div>
               </Card>
 
@@ -861,26 +803,27 @@ function WeddingInvitationContent() {
               <Card className="p-8 bg-white/90 backdrop-blur-sm border-2 border-white/50 hover:shadow-xl transition-all duration-300">
                 <div className="space-y-4 text-center">
                   <div className="text-6xl mb-4">💳</div>
-                  <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">Transferencia</h3>
+                  <h3 className="text-2xl font-playfair font-semibold mb-4" style={{color: '#7DA080'}}>Transferencia</h3>
                   <p className="text-wedding-blush font-cormorant text-sm mb-4 leading-relaxed italic">
                     "No es necesario estar cerca, para hacer sentir el amor y el cariño"
                   </p>
                   <p className="text-wedding-blush font-cormorant text-sm mb-4">
                     Si así lo prefieres puedes realizar transferencia
                   </p>
-                  <div className="bg-rose-50 p-4 rounded-lg text-rose-700 font-cormorant">
-                    <p className="font-semibold">NOMBRE</p>
-                    <p className="font-semibold">BANCO</p>
-                    <p className="font-mono">0000-0000-0000</p>
+                  <div className="p-4 rounded-lg font-cormorant" style={{backgroundColor: '#f0f7f1', color: '#7DA080'}}>
+                    <p className="font-semibold">Leowander Piña & Sarah Saint Hilaire</p>
+                    <p className="font-semibold">Banco Popular</p>
+                    <p className="text-sm mb-2">Cuenta corriente: <span className="font-mono">834192650</span></p>
+                    <p className="text-sm">Cédula: <span className="font-mono">402-2480972-9</span></p>
                   </div>
                 </div>
               </Card>
             </div>
 
             <div className="mt-12 bg-white/90 backdrop-blur-sm rounded-2xl p-8 border-2 border-white/50">
-              <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">Gracias</h3>
+              <h3 className="text-2xl font-playfair font-semibold mb-4" style={{color: '#7DA080'}}>Gracias</h3>
               <p className="text-wedding-blush font-cormorant text-lg leading-relaxed">
-                Por tu muestra de cariño y espero verte en este día tan especial
+                Por tu muestra de cariño y esperamos verte en este día tan especial
               </p>
             </div>
           </div>
@@ -900,19 +843,8 @@ function WeddingInvitationContent() {
             </div>
             <h2 className="text-4xl md:text-5xl font-great-vibes text-wedding-primary mb-12">Buenos Deseos</h2>
             
-            <div className="grid md:grid-cols-2 gap-8 mb-16">
-              <Card className="p-8 bg-gradient-to-br from-white to-rose-50 border-2 border-rose-100 hover:border-rose-200 transition-all duration-300 hover:shadow-lg">
-                <div className="space-y-4 text-center">
-                  <div className="text-wedding-accent text-6xl mb-4">💝</div>
-                  <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">Ver Buenos Deseos</h3>
-                  <p className="text-wedding-blush font-cormorant text-sm mb-6 leading-relaxed">
-                    Lee todos los hermosos mensajes y deseos que familiares y amigos han compartido para nosotros
-                  </p>
-                  <Button className="bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-3 font-cormorant text-lg rounded-lg shadow-lg">
-                    Ver Buenos Deseos
-                  </Button>
-                </div>
-              </Card>
+
+              
 
               <Card className="p-8 bg-gradient-to-br from-white to-rose-50 border-2 border-rose-100 hover:border-rose-200 transition-all duration-300 hover:shadow-lg">
                 <div className="space-y-4 text-center">
@@ -926,7 +858,7 @@ function WeddingInvitationContent() {
                   </Button>
                 </div>
               </Card>
-            </div>
+
 
           </div>
         </div>
@@ -1072,7 +1004,7 @@ function WeddingInvitationContent() {
       </section>
 
       {/* Hashtag Section */}
-      <section className="py-20 bg-gradient-to-br from-rose-600 via-rose-500 to-rose-400 relative overflow-hidden">
+      <section className="py-20 relative overflow-hidden" style={{background: 'linear-gradient(to bottom right, #6B9570, #7DA080, #8AAA8D)'}}>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20 text-9xl text-white font-great-vibes">♡</div>
           <div className="absolute bottom-20 right-20 text-9xl text-white font-great-vibes">♡</div>
@@ -1080,7 +1012,7 @@ function WeddingInvitationContent() {
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <div className="mb-8">
-              <div className="text-rose-100 text-lg font-cormorant tracking-[0.3em] mb-2">✦ COMPARTE CON NOSOTROS ✦</div>
+              <div className="text-green-100 text-lg font-cormorant tracking-[0.3em] mb-2">✦ COMPARTE CON NOSOTROS ✦</div>
             </div>
             <h2 className="text-4xl md:text-5xl font-great-vibes text-white mb-8">Hashtag Oficial</h2>
             
