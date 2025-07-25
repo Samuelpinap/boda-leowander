@@ -1,0 +1,234 @@
+/* Elegant Envelope Card Animation Styles */
+
+/* Breathing animation for the initial envelope state */
+@keyframes envelopeBreathing {
+  0%, 100% { 
+    transform: scale(1) translateY(0px);
+    box-shadow: 0 20px 40px rgba(201, 121, 94, 0.3), 0 10px 20px rgba(215, 125, 89, 0.2);
+  }
+  50% { 
+    transform: scale(1.02) translateY(-3px);
+    box-shadow: 0 25px 50px rgba(201, 121, 94, 0.4), 0 15px 30px rgba(215, 125, 89, 0.3);
+  }
+}
+
+.envelope-breathing {
+  animation: envelopeBreathing 4s ease-in-out infinite;
+}
+
+/* Card hover effects */
+.card:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease-out;
+}
+
+/* Seal animations */
+.seal {
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.seal:hover {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 10px 25px rgba(215, 125, 89, 0.4);
+}
+
+/* Stage 1: Letter comes out of envelope upward (larger size) */
+@keyframes letterExitUp {
+  0% {
+    transform: translateY(0) scale(1.0);
+    opacity: 0;
+    z-index: 10;
+  }
+  100% {
+    transform: translateY(-100px) scale(1.0);
+    opacity: 1;
+    z-index: 50;
+  }
+}
+
+.letter-exit-up {
+  animation: letterExitUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Stage 2: Letter descends and positions on top of envelope while scaling up */
+@keyframes letterDescendAndScale {
+  0% {
+    transform: translateY(-100px) scale(1.0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-50px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-20px) scale(1.4);
+    opacity: 1;
+  }
+}
+
+.letter-descend-scale {
+  animation: letterDescendAndScale 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Gentle floating when letter is positioned on top */
+@keyframes letterTopFloat {
+  0%, 100% {
+    transform: translateY(-20px) scale(1.4);
+  }
+  50% {
+    transform: translateY(-22px) scale(1.4);
+  }
+}
+
+.letter-top-float {
+  animation: letterTopFloat 3s ease-in-out infinite;
+}
+
+/* Envelope shrinking animation when completed */
+@keyframes envelopeShrink {
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.05) translate(600px, 400px);
+    opacity: 0;
+  }
+}
+
+.envelope-shrink {
+  animation: envelopeShrink 0.8s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+/* Floating animation for the floating button */
+@keyframes floatBounce {
+  0%, 100% { 
+    transform: translateY(0px);
+  }
+  50% { 
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float-bounce {
+  animation: floatBounce 2s ease-in-out infinite;
+}
+
+/* Paper texture overlay for the letter */
+.letter-texture::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.05) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, rgba(139, 69, 19, 0.05) 1px, transparent 1px),
+    radial-gradient(circle at 40% 80%, rgba(139, 69, 19, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px, 30px 30px, 70px 70px;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Wax seal glow effect */
+@keyframes sealGlow {
+  0%, 100% { 
+    box-shadow: 0 0 10px rgba(244, 63, 94, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.5), 0 0 30px rgba(244, 63, 94, 0.3);
+  }
+}
+
+.seal-glow {
+  animation: sealGlow 2s ease-in-out infinite;
+}
+
+/* Fade in animations for letter content */
+@keyframes fadeInSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-slide-up {
+  animation: fadeInSlideUp 0.6s ease-out forwards;
+}
+
+/* Staggered animation delays for letter content */
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-400 { animation-delay: 0.4s; }
+.animate-delay-500 { animation-delay: 0.5s; }
+.animate-delay-600 { animation-delay: 0.6s; }
+.animate-delay-700 { animation-delay: 0.7s; }
+.animate-delay-800 { animation-delay: 0.8s; }
+.animate-delay-900 { animation-delay: 0.9s; }
+.animate-delay-1000 { animation-delay: 1s; }
+
+/* Envelope shadow depth */
+.envelope-shadow {
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 16px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Letter paper shadow */
+.letter-shadow {
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .envelope-breathing {
+    animation-duration: 4s; /* Slower on mobile for better performance */
+  }
+  
+  .envelope-body:hover {
+    transform: none; /* Disable hover effects on mobile */
+  }
+  
+  /* Reduce motion for better mobile performance */
+  @media (prefers-reduced-motion: reduce) {
+    .envelope-breathing,
+    .letter-emerge,
+    .envelope-shrink,
+    .animate-float-bounce,
+    .seal-glow {
+      animation: none;
+    }
+    
+    .envelope-flap-open {
+      transition: transform 0.3s ease-out;
+    }
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .envelope-body {
+    border-width: 3px;
+    border-color: #000;
+  }
+  
+  .letter-emerge {
+    border: 2px solid #000;
+  }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .envelope-breathing {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
+}

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import SearchParamsHandler from "@/components/SearchParamsHandler"
+import EnvelopeAnimation from "@/components/EnvelopeAnimation"
 
 function WeddingInvitationContent() {
   const [invitationData, setInvitationData] = useState({
@@ -41,6 +42,7 @@ function WeddingInvitationContent() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isPlaying, setIsPlaying] = useState(true)
   const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null)
+  const [showMainContent, setShowMainContent] = useState(false)
 
   // Handlers for SearchParamsHandler
   const handleInvitationUpdate = (data: { invitedBy: string; guestCount: number; isValid: boolean }) => {
@@ -242,7 +244,11 @@ function WeddingInvitationContent() {
     })
   }
 
-  return (
+  const handleEnvelopeComplete = () => {
+    setShowMainContent(true)
+  }
+
+  const mainContent = (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
       <SearchParamsHandler
         onInvitationUpdate={handleInvitationUpdate}
@@ -1060,6 +1066,12 @@ function WeddingInvitationContent() {
         </div>
       </button>
     </div>
+  )
+
+  return (
+    <EnvelopeAnimation onComplete={handleEnvelopeComplete}>
+      {mainContent}
+    </EnvelopeAnimation>
   )
 }
 
