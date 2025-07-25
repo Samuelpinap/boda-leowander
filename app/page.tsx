@@ -329,27 +329,7 @@ function WeddingInvitationContent() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-amber-900/20 to-black/30"></div>
         </div>
 
-        <div className={`relative z-10 text-center text-white px-6 animate-fade-in ${personalizedInvite.isPersonalized ? 'pt-32 md:pt-20' : 'pt-20 md:pt-16'}`}>
-          {personalizedInvite.isPersonalized && (
-            <div className="mb-8 animate-slide-up">
-              <div className="bg-white/15 backdrop-blur-sm rounded-2xl border border-white/30 p-6 shadow-2xl animate-welcome-glow">
-                <div className="text-orange-200 text-lg font-cormorant mb-2 tracking-[0.2em] animate-sparkle">
-                  ✨ Especialmente para ti ✨
-                </div>
-                <h2 className="text-3xl md:text-4xl font-great-vibes text-white mb-2 drop-shadow-lg">
-                  ¡Bienvenid{personalizedInvite.gender === 'a' ? 'a' : personalizedInvite.gender === 'o' ? 'o' : 'o/a'}, <span className="text-yellow-200">{personalizedInvite.name}</span>!
-                </h2>
-                <p className="text-orange-100 font-cormorant text-sm md:text-base leading-relaxed">
-                  Nos emociona enormemente tener{personalizedInvite.gender === 'a' ? 'te' : personalizedInvite.gender === 'o' ? 'te' : 'te'} en nuestra celebración de amor
-                </p>
-                <div className="flex justify-center items-center space-x-2 mt-3">
-                  <div className="h-px bg-white/30 w-8"></div>
-                  <div className="text-yellow-200 text-xl">💕</div>
-                  <div className="h-px bg-white/30 w-8"></div>
-                </div>
-              </div>
-            </div>
-          )}
+        <div className="relative z-10 text-center text-white px-6 animate-fade-in pt-20 md:pt-16">
           
           <div className="mb-6">
             <div className="text-orange-200 text-2xl font-cormorant mb-2 tracking-[0.3em]">✦ JUNTOS PARA SIEMPRE ✦</div>
@@ -390,55 +370,37 @@ function WeddingInvitationContent() {
               <div className="lg:w-2/3 flex flex-col md:flex-row gap-8 md:gap-6">
                 {/* Card 1 */}
                 <Card className="relative bg-gradient-to-br from-white to-rose-50 shadow-lg border border-rose-100 p-8 text-center group hover:shadow-2xl hover:border-rose-200 transition-all duration-500 hover:-translate-y-2">
-                  <div className="relative w-32 h-48 mx-auto mb-6 overflow-hidden rounded-full bg-rose-100 ring-4 ring-rose-200/50">
+                  <div className="relative w-32 h-48 mx-auto overflow-hidden rounded-full bg-rose-100 ring-4 ring-rose-200/50">
                     <Image
-                      src="/placeholder.svg?height=200&width=130"
-                      alt="The day we met"
+                      src="/images/image-1.jpeg"
+                      alt="Wedding photo 1"
                       fill
-                      className="object-cover grayscale"
+                      className="object-cover"
                     />
-                  </div>
-                  <div className="absolute top-4 right-4 text-4xl font-great-vibes text-rose-300">01.</div>
-                  <div className="space-y-2">
-                    <p className="text-sm tracking-wider text-rose-500 font-cormorant">24 JUN 2017</p>
-                    <h3 className="text-lg font-playfair text-wedding-primary font-semibold">THE DAY WE MET</h3>
-                    <div className="mt-2 text-wedding-accent">♥</div>
                   </div>
                 </Card>
 
                 {/* Card 2 */}
                 <Card className="relative bg-gradient-to-br from-white to-rose-50 shadow-lg border border-rose-100 p-8 text-center group hover:shadow-2xl hover:border-rose-200 transition-all duration-500 hover:-translate-y-2">
-                  <div className="relative w-32 h-48 mx-auto mb-6 overflow-hidden rounded-full bg-rose-100 ring-4 ring-rose-200/50">
+                  <div className="relative w-32 h-48 mx-auto overflow-hidden rounded-full bg-rose-100 ring-4 ring-rose-200/50">
                     <Image
-                      src="/placeholder.svg?height=200&width=130"
-                      alt="Stories opening"
+                      src="/images/image-2.jpeg"
+                      alt="Wedding photo 2"
                       fill
-                      className="object-cover grayscale"
+                      className="object-cover"
                     />
-                  </div>
-                  <div className="absolute top-4 right-4 text-4xl font-great-vibes text-rose-300">02.</div>
-                  <div className="space-y-2">
-                    <p className="text-sm tracking-wider text-rose-500 font-cormorant">12 JUL 2017</p>
-                    <h3 className="text-lg font-playfair text-wedding-primary font-semibold">STORIES OPENING</h3>
-                    <div className="mt-2 text-wedding-accent">♥</div>
                   </div>
                 </Card>
 
                 {/* Card 3 */}
                 <Card className="relative bg-gradient-to-br from-white to-rose-50 shadow-lg border border-rose-100 p-8 text-center group hover:shadow-2xl hover:border-rose-200 transition-all duration-500 hover:-translate-y-2">
-                  <div className="relative w-32 h-48 mx-auto mb-6 overflow-hidden rounded-full bg-rose-100 ring-4 ring-rose-200/50">
+                  <div className="relative w-32 h-48 mx-auto overflow-hidden rounded-full bg-rose-100 ring-4 ring-rose-200/50">
                     <Image
-                      src="/placeholder.svg?height=200&width=130"
-                      alt="The next journey"
+                      src="/images/image-3.jpeg"
+                      alt="Wedding photo 3"
                       fill
-                      className="object-cover grayscale"
+                      className="object-cover object-left"
                     />
-                  </div>
-                  <div className="absolute top-4 right-4 text-4xl font-great-vibes text-rose-300">03.</div>
-                  <div className="space-y-2">
-                    <p className="text-sm tracking-wider text-rose-500 font-cormorant">19 MAY 2022</p>
-                    <h3 className="text-lg font-playfair text-wedding-primary font-semibold">THE NEXT JOURNEY</h3>
-                    <div className="mt-2 text-wedding-accent">♥</div>
                   </div>
                 </Card>
               </div>
