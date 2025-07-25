@@ -251,7 +251,7 @@ function WeddingInvitationContent() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/images/hero-couple.jpg"
+            src="/images/hero-couple.jpeg"
             alt="Couple walking through mountains"
             fill
             className="object-cover"
@@ -285,7 +285,7 @@ function WeddingInvitationContent() {
           <div className="mb-6">
             <div className="text-orange-200 text-2xl font-cormorant mb-2 tracking-[0.3em]">✦ TOGETHER FOREVER ✦</div>
           </div>
-          <h1 className="text-6xl md:text-8xl font-great-vibes mb-6 leading-tight animate-float drop-shadow-2xl">Me and you. Just us two.</h1>
+          <h1 className="text-6xl md:text-8xl font-great-vibes mb-6 leading-tight animate-float drop-shadow-2xl">De lo inesperado nació lo eterno</h1>
           <div className="space-y-2">
             <p className="text-xl md:text-3xl font-cormorant tracking-[0.2em] text-orange-100">29.11.2025</p>
             <div className="flex justify-center items-center space-x-4 mt-4">
@@ -501,9 +501,9 @@ function WeddingInvitationContent() {
               <Card className="p-8 bg-gradient-to-br from-white to-rose-50 border-2 border-rose-100 hover:border-rose-200 transition-all duration-300 hover:shadow-lg">
                 <div className="space-y-4 text-center">
                   <div className="text-wedding-accent text-4xl mb-4">⛪</div>
-                  <h3 className="text-2xl font-playfair text-wedding-primary font-semibold">Iglesia</h3>
+                  <h3 className="text-2xl font-playfair text-wedding-primary font-semibold">Ceremonia</h3>
                   <div className="text-wedding-blush space-y-3 font-cormorant">
-                    <p className="font-medium text-xl">6:00 PM</p>
+                    <p className="font-medium text-xl">3:00 PM</p>
                     <p className="text-lg font-semibold">Parroquia De los Santos Médicos</p>
                     <p>Cosme y Damián</p>
                     <p>Santiago, República Dominicana</p>
@@ -520,7 +520,7 @@ function WeddingInvitationContent() {
                   <div className="text-wedding-accent text-4xl mb-4">🎉</div>
                   <h3 className="text-2xl font-playfair text-wedding-primary font-semibold">Recepción</h3>
                   <div className="text-wedding-blush space-y-3 font-cormorant">
-                    <p className="font-medium text-xl">8:00 PM</p>
+                    <p className="font-medium text-xl">5:00 PM</p>
                     <p className="text-lg font-semibold">Jardín de bodas todo santiago</p>
                     <p>Santiago, República Dominicana</p>
                     <p className="text-sm italic">Celebración, música y alegría</p>
@@ -643,7 +643,7 @@ function WeddingInvitationContent() {
                   <div className="text-wedding-blush text-5xl mb-4">🥂</div>
                   <h3 className="text-xl font-playfair text-wedding-primary font-semibold">Recepción</h3>
                   <div className="text-wedding-blush font-cormorant">
-                    <p className="text-2xl font-bold">6:00 PM</p>
+                    <p className="text-2xl font-bold">5:00 PM</p>
                   </div>
                 </div>
               </Card>
@@ -657,6 +657,104 @@ function WeddingInvitationContent() {
                   </div>
                 </div>
               </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Dress Code Section */}
+      <section className="py-20 bg-gradient-to-b from-white to-rose-50 relative">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-10 left-1/4 text-6xl text-rose-300 font-great-vibes">❦</div>
+          <div className="absolute bottom-10 right-1/4 text-6xl text-rose-300 font-great-vibes">❦</div>
+        </div>
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="mb-8">
+              <div className="text-wedding-accent text-lg font-cormorant tracking-[0.3em] mb-2">✦ CÓDIGO DE VESTIMENTA ✦</div>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-great-vibes text-wedding-primary mb-6">Nuestra boda</h2>
+            <h3 className="text-2xl md:text-3xl font-playfair text-wedding-primary mb-12 italic">Formal garden party</h3>
+            
+            {/* Dresscode Image */}
+            <div className="mb-12">
+              <Image
+                src="/images/dresscode.jpeg"
+                alt="Código de vestimenta - Formal garden party"
+                width={600}
+                height={800}
+                className="mx-auto rounded-2xl shadow-lg border-4 border-white"
+              />
+            </div>
+            
+            {/* Text Information */}
+            <div className="grid md:grid-cols-2 gap-12 max-w-3xl mx-auto mb-12">
+              <div className="text-center">
+                <div className="text-8xl mb-6">🤵🏻</div>
+                <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">ELLOS</h3>
+                <div className="text-wedding-blush font-cormorant space-y-2 text-lg">
+                  <p>Traje</p>
+                  <p>Chacabana</p>
+                  <p>Corbatín o corbata</p>
+                </div>
+              </div>
+              
+              <div className="text-center">
+                <div className="text-8xl mb-6">👰🏻</div>
+                <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">ELLAS</h3>
+                <div className="text-wedding-blush font-cormorant space-y-2 text-lg">
+                  <p>Vestido largo</p>
+                  <p>Tacón grueso</p>
+                  <p>(no de aguja)</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Suggested Colors */}
+            <Card className="p-8 bg-gradient-to-br from-rose-50 to-white border-2 border-rose-100 max-w-3xl mx-auto mb-8">
+              <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-6">COLORES SUGERIDOS</h3>
+              <div className="flex flex-wrap justify-center gap-3 mb-6">
+                {/* Pastel colors from the image */}
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#B8E6E1'}}></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#D4E7A1'}}></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F5E991'}}></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F4C2C2'}}></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F5B895'}}></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F2D7A7'}}></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F9E8A8'}}></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#E5F2A3'}}></div>
+              </div>
+              <div className="flex flex-wrap justify-center gap-3 mb-4">
+                {/* Blue tones */}
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#E8E8F5'}}></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#D1D1F0'}}></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#A8C8E8'}}></div>
+                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#7B68EE'}}></div>
+              </div>
+              <p className="text-wedding-blush font-cormorant text-lg mb-6">Tonos pasteles y suaves para complementar el jardín</p>
+            </Card>
+
+            {/* What NOT to wear */}
+            <Card className="p-6 bg-gradient-to-br from-red-50 to-white border-2 border-red-200 max-w-2xl mx-auto mb-8">
+              <div className="flex items-center justify-center mb-4">
+                <div className="text-red-500 text-3xl mr-3">🚫</div>
+                <h3 className="text-xl font-playfair text-red-700 font-semibold">NO asistir de:</h3>
+              </div>
+              <p className="text-red-600 font-cormorant text-lg">
+                rojo, blanco, beige o estampados
+              </p>
+            </Card>
+
+            {/* Pinterest Link */}
+            <div className="mt-8">
+              <p className="text-wedding-blush font-cormorant text-lg mb-4">Para inspiración:</p>
+              <Button 
+                className="bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-3 font-cormorant text-lg rounded-lg shadow-lg inline-flex items-center"
+                onClick={() => window.open('https://pin.it/9uXupRDgz', '_blank')}
+              >
+                <div className="mr-2">📌</div>
+                Ver en Pinterest
+              </Button>
             </div>
           </div>
         </div>
@@ -772,33 +870,6 @@ function WeddingInvitationContent() {
               </Card>
             </div>
 
-            {/* Sugerencia de canciones Section */}
-            <div className="max-w-3xl mx-auto">
-              <div className="mb-8">
-                <h3 className="text-3xl font-playfair text-wedding-primary font-semibold mb-4">Sugerencia de Canciones</h3>
-                <div className="flex justify-center items-center space-x-4 mb-8">
-                  <div className="h-px bg-rose-300 w-16"></div>
-                  <div className="text-wedding-accent text-lg">🎵</div>
-                  <div className="h-px bg-rose-300 w-16"></div>
-                </div>
-              </div>
-
-              <Card className="p-8 bg-gradient-to-br from-white to-rose-50 border-2 border-rose-100 hover:border-rose-200 transition-all duration-300 hover:shadow-lg">
-                <div className="space-y-4 text-center">
-                  <div className="text-wedding-accent text-6xl mb-4">🎶</div>
-                  <h4 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">¿Qué canción no puede faltar?</h4>
-                  <p className="text-wedding-blush font-cormorant text-sm mb-6 leading-relaxed">
-                    Ayúdanos a crear la playlist perfecta para nuestra celebración. Sugiere las canciones que harán que todos bailen
-                  </p>
-                  <Button className="bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-3 font-cormorant text-lg rounded-lg shadow-lg mr-4">
-                    Ver Sugerencias
-                  </Button>
-                  <Button className="bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-3 font-cormorant text-lg rounded-lg shadow-lg">
-                    Sugerir Canción
-                  </Button>
-                </div>
-              </Card>
-            </div>
           </div>
         </div>
       </section>
@@ -966,55 +1037,6 @@ function WeddingInvitationContent() {
         </div>
       </section>
 
-      {/* Dress Code Section */}
-      <section className="py-20 bg-gradient-to-b from-white to-rose-50 relative">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-10 left-1/4 text-6xl text-rose-300 font-great-vibes">❦</div>
-          <div className="absolute bottom-10 right-1/4 text-6xl text-rose-300 font-great-vibes">❦</div>
-        </div>
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-8">
-              <div className="text-wedding-accent text-lg font-cormorant tracking-[0.3em] mb-2">✦ CÓDIGO DE VESTIMENTA ✦</div>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-great-vibes text-wedding-primary mb-12">Dress Code</h2>
-            
-            <div className="grid md:grid-cols-2 gap-12 max-w-2xl mx-auto mb-12">
-              <div className="text-center">
-                <div className="text-8xl mb-6">🤵🏻</div>
-                <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">Caballeros</h3>
-                <div className="text-wedding-blush font-cormorant space-y-2">
-                  <p>Traje formal</p>
-                  <p>Corbata o pajarita</p>
-                  <p>Zapatos de vestir</p>
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-8xl mb-6">👰🏻</div>
-                <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">Damas</h3>
-                <div className="text-wedding-blush font-cormorant space-y-2">
-                  <p>Vestido elegante</p>
-                  <p>Evitar blanco</p>
-                  <p>Tacones cómodos</p>
-                </div>
-              </div>
-            </div>
-            
-            <Card className="p-8 bg-gradient-to-br from-rose-50 to-white border-2 border-rose-100 max-w-2xl mx-auto">
-              <h3 className="text-xl font-playfair text-wedding-primary font-semibold mb-4">Colores Sugeridos</h3>
-              <div className="flex justify-center space-x-4 mb-4">
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#C9795E'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#D9856A'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#D77D59'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#808E69'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#C88475'}}></div>
-              </div>
-              <p className="text-wedding-blush font-cormorant">Colores de la boda y tonos complementarios</p>
-            </Card>
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="py-16 bg-gradient-to-t from-rose-100 to-white border-t border-rose-200 relative overflow-hidden">

@@ -46,14 +46,14 @@ export const metadata: Metadata = {
     description: 'Nos complace invitarte a celebrar nuestro amor el 29 de Noviembre, 2025 en Santiago, República Dominicana',
     images: [
       {
-        url: '/images/hero-couple.jpg',
+        url: '/images/hero-couple.jpeg',
         width: 1200,
         height: 630,
         alt: 'Leowander & Sarah - Invitación de Boda',
         type: 'image/jpeg',
       },
       {
-        url: '/images/hero-couple.jpg',
+        url: '/images/hero-couple.jpeg',
         width: 1920,
         height: 1080,
         alt: 'Leowander & Sarah - Wedding Invitation',
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     creator: '@leowander_sarah', // Replace with actual Twitter handle if exists
     title: 'Leowander & Sarah - Invitación de Boda',
     description: 'Nos complace invitarte a celebrar nuestro amor el 29 de Noviembre, 2025 en Santiago, República Dominicana',
-    images: ['/images/hero-couple.jpg'],
+    images: ['/images/hero-couple.jpeg'],
   },
   robots: {
     index: true,
