@@ -39,6 +39,8 @@ function WeddingInvitationContent() {
   })
 
   const [isScrolled, setIsScrolled] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null)
 
   // Handlers for SearchParamsHandler
   const handleInvitationUpdate = (data: { invitedBy: string; guestCount: number; isValid: boolean }) => {
@@ -99,6 +101,67 @@ function WeddingInvitationContent() {
     // Cleanup
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isScrolled])
+
+  // Initialize audio and start playing from 1:33 when component mounts
+  useEffect(() => {
+    const audio = new Audio('/audio/ordinary-wedding-version.mp3')
+    audio.currentTime = 93 // 1:33 in seconds
+    audio.loop = true
+    audio.volume = 0.3 // Set volume to 30%
+    
+    setAudioRef(audio)
+    
+    // Auto-play on user interaction
+    const playAudio = () => {
+      console.log('User interaction detected, attempting to play music...')
+      audio.currentTime = 93 // Ensure it starts from 1:33
+      console.log('Set audio currentTime to 93 seconds (1:33)')
+      audio.play().then(() => {
+        console.log('Music started playing successfully')
+        setIsPlaying(true)
+        document.removeEventListener('click', playAudio)
+        document.removeEventListener('touchstart', playAudio)
+      }).catch(error => {
+        console.log('Auto-play prevented:', error)
+        setIsPlaying(false)
+      })
+    }
+    
+    // Wait for user interaction to play due to browser auto-play policies
+    document.addEventListener('click', playAudio)
+    document.addEventListener('touchstart', playAudio)
+    
+    return () => {
+      audio.pause()
+      document.removeEventListener('click', playAudio)
+      document.removeEventListener('touchstart', playAudio)
+    }
+  }, [])
+
+  const toggleMusic = () => {
+    console.log('Toggle music clicked, audioRef:', audioRef, 'isPlaying:', isPlaying)
+    if (audioRef) {
+      if (isPlaying) {
+        console.log('Pausing music...')
+        audioRef.pause()
+        setIsPlaying(false)
+      } else {
+        console.log('Attempting to play music from 1:33...')
+        // Always start from 1:33 when resuming
+        audioRef.currentTime = 93
+        audioRef.play().then(() => {
+          console.log('Music play successful!')
+          setIsPlaying(true)
+        }).catch(error => {
+          console.error('Play failed:', error)
+          console.error('Audio readyState:', audioRef.readyState)
+          console.error('Audio networkState:', audioRef.networkState)
+        })
+      }
+    } else {
+      console.error('No audioRef available')
+    }
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -534,6 +597,99 @@ function WeddingInvitationContent() {
               </Card>
             </div>
 
+            {/* Dress Code Section */}
+            <div className="max-w-4xl mx-auto mb-16">
+              <div className="mb-8">
+                <h3 className="text-3xl font-playfair text-wedding-primary font-semibold mb-4">Código de Vestimenta</h3>
+                <div className="flex justify-center items-center space-x-4 mb-8">
+                  <div className="h-px bg-rose-300 w-16"></div>
+                  <div className="text-wedding-accent text-lg">👗</div>
+                  <div className="h-px bg-rose-300 w-16"></div>
+                </div>
+              </div>
+              
+              <div className="text-center mb-8">
+                <h4 className="text-xl font-playfair text-wedding-primary mb-4 italic">Formal garden party</h4>
+              </div>
+              
+              {/* Dresscode Image */}
+              <div className="mb-8">
+                <Image
+                  src="/images/dresscode.jpeg"
+                  alt="Código de vestimenta - Formal garden party"
+                  width={500}
+                  height={650}
+                  className="mx-auto rounded-xl shadow-lg border-2 border-white"
+                />
+              </div>
+              
+              {/* Text Information */}
+              <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto mb-8">
+                <div className="text-center">
+                  <div className="text-6xl mb-4">🤵🏻</div>
+                  <h5 className="text-lg font-playfair text-wedding-primary font-semibold mb-2">ELLOS</h5>
+                  <div className="text-wedding-blush font-cormorant space-y-1">
+                    <p>Traje</p>
+                    <p>Chacabana</p>
+                    <p>Corbatín o corbata</p>
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <div className="text-6xl mb-4">👰🏻</div>
+                  <h5 className="text-lg font-playfair text-wedding-primary font-semibold mb-2">ELLAS</h5>
+                  <div className="text-wedding-blush font-cormorant space-y-1">
+                    <p>Vestido largo</p>
+                    <p>Tacón grueso</p>
+                    <p>(no de aguja)</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Suggested Colors */}
+              <Card className="p-6 bg-gradient-to-br from-rose-50 to-white border-2 border-rose-100 max-w-2xl mx-auto mb-6">
+                <h5 className="text-lg font-playfair text-wedding-primary font-semibold mb-4 text-center">COLORES SUGERIDOS</h5>
+                <div className="flex flex-wrap justify-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#B8E6E1'}}></div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#D4E7A1'}}></div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F5E991'}}></div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F4C2C2'}}></div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F5B895'}}></div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F2D7A7'}}></div>
+                </div>
+                <div className="flex flex-wrap justify-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#E8E8F5'}}></div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#D1D1F0'}}></div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#A8C8E8'}}></div>
+                  <div className="w-8 h-8 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#7B68EE'}}></div>
+                </div>
+                <p className="text-wedding-blush font-cormorant text-sm text-center">Tonos pasteles y suaves</p>
+              </Card>
+
+              {/* What NOT to wear */}
+              <Card className="p-6 bg-gradient-to-br from-rose-50 to-white border-2 border-rose-100 max-w-2xl mx-auto mb-6">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="text-red-500 text-3xl mr-3">🚫</div>
+                  <h5 className="text-lg font-playfair text-wedding-primary font-semibold text-center">NO asistir de:</h5>
+                </div>
+                <p className="text-red-600 font-cormorant text-center">
+                  rojo, blanco, beige o estampados
+                </p>
+              </Card>
+
+              {/* Pinterest Link */}
+              <div className="text-center">
+                <p className="text-wedding-blush font-cormorant mb-3 text-sm">Para inspiración:</p>
+                <Button 
+                  className="bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-2 font-cormorant text-sm rounded-lg shadow-lg inline-flex items-center"
+                  onClick={() => window.open('https://pin.it/9uXupRDgz', '_blank')}
+                >
+                  <div className="mr-2">📌</div>
+                  Ver en Pinterest
+                </Button>
+              </div>
+            </div>
+
             {/* Accommodation Section */}
             <div className="max-w-5xl mx-auto">
               <div className="mb-8">
@@ -657,104 +813,6 @@ function WeddingInvitationContent() {
                   </div>
                 </div>
               </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Dress Code Section */}
-      <section className="py-20 bg-gradient-to-b from-white to-rose-50 relative">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-10 left-1/4 text-6xl text-rose-300 font-great-vibes">❦</div>
-          <div className="absolute bottom-10 right-1/4 text-6xl text-rose-300 font-great-vibes">❦</div>
-        </div>
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="mb-8">
-              <div className="text-wedding-accent text-lg font-cormorant tracking-[0.3em] mb-2">✦ CÓDIGO DE VESTIMENTA ✦</div>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-great-vibes text-wedding-primary mb-6">Nuestra boda</h2>
-            <h3 className="text-2xl md:text-3xl font-playfair text-wedding-primary mb-12 italic">Formal garden party</h3>
-            
-            {/* Dresscode Image */}
-            <div className="mb-12">
-              <Image
-                src="/images/dresscode.jpeg"
-                alt="Código de vestimenta - Formal garden party"
-                width={600}
-                height={800}
-                className="mx-auto rounded-2xl shadow-lg border-4 border-white"
-              />
-            </div>
-            
-            {/* Text Information */}
-            <div className="grid md:grid-cols-2 gap-12 max-w-3xl mx-auto mb-12">
-              <div className="text-center">
-                <div className="text-8xl mb-6">🤵🏻</div>
-                <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">ELLOS</h3>
-                <div className="text-wedding-blush font-cormorant space-y-2 text-lg">
-                  <p>Traje</p>
-                  <p>Chacabana</p>
-                  <p>Corbatín o corbata</p>
-                </div>
-              </div>
-              
-              <div className="text-center">
-                <div className="text-8xl mb-6">👰🏻</div>
-                <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">ELLAS</h3>
-                <div className="text-wedding-blush font-cormorant space-y-2 text-lg">
-                  <p>Vestido largo</p>
-                  <p>Tacón grueso</p>
-                  <p>(no de aguja)</p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Suggested Colors */}
-            <Card className="p-8 bg-gradient-to-br from-rose-50 to-white border-2 border-rose-100 max-w-3xl mx-auto mb-8">
-              <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-6">COLORES SUGERIDOS</h3>
-              <div className="flex flex-wrap justify-center gap-3 mb-6">
-                {/* Pastel colors from the image */}
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#B8E6E1'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#D4E7A1'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F5E991'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F4C2C2'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F5B895'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F2D7A7'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#F9E8A8'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#E5F2A3'}}></div>
-              </div>
-              <div className="flex flex-wrap justify-center gap-3 mb-4">
-                {/* Blue tones */}
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#E8E8F5'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#D1D1F0'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#A8C8E8'}}></div>
-                <div className="w-12 h-12 rounded-full border-2 border-white shadow-lg" style={{backgroundColor: '#7B68EE'}}></div>
-              </div>
-              <p className="text-wedding-blush font-cormorant text-lg mb-6">Tonos pasteles y suaves para complementar el jardín</p>
-            </Card>
-
-            {/* What NOT to wear */}
-            <Card className="p-6 bg-gradient-to-br from-red-50 to-white border-2 border-red-200 max-w-2xl mx-auto mb-8">
-              <div className="flex items-center justify-center mb-4">
-                <div className="text-red-500 text-3xl mr-3">🚫</div>
-                <h3 className="text-xl font-playfair text-red-700 font-semibold">NO asistir de:</h3>
-              </div>
-              <p className="text-red-600 font-cormorant text-lg">
-                rojo, blanco, beige o estampados
-              </p>
-            </Card>
-
-            {/* Pinterest Link */}
-            <div className="mt-8">
-              <p className="text-wedding-blush font-cormorant text-lg mb-4">Para inspiración:</p>
-              <Button 
-                className="bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-3 font-cormorant text-lg rounded-lg shadow-lg inline-flex items-center"
-                onClick={() => window.open('https://pin.it/9uXupRDgz', '_blank')}
-              >
-                <div className="mr-2">📌</div>
-                Ver en Pinterest
-              </Button>
             </div>
           </div>
         </div>
@@ -1058,6 +1116,17 @@ function WeddingInvitationContent() {
           <div className="mt-6 text-wedding-accent text-sm font-cormorant tracking-[0.2em]">✦ PARA SIEMPRE & SIEMPRE ✦</div>
         </div>
       </footer>
+
+      {/* Floating Music Control Button */}
+      <button
+        onClick={toggleMusic}
+        className="fixed bottom-6 right-6 z-50 bg-wedding-primary hover:bg-wedding-blush text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110"
+        aria-label={isPlaying ? 'Pausar música' : 'Reproducir música'}
+      >
+        <div className="text-2xl">
+          {isPlaying ? '🔊' : '🔇'}
+        </div>
+      </button>
     </div>
   )
 }
