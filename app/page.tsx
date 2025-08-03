@@ -32,15 +32,15 @@ function WeddingInvitationContent() {
     guestCount: 1,
   })
 
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  })
+  const [timeLeft, setTimeLeft] = useState<{
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+  } | null>(null)
 
   const [isScrolled, setIsScrolled] = useState(false)
-  const [isPlaying, setIsPlaying] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(false)
   const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null)
   const [showMainContent, setShowMainContent] = useState(false)
 
@@ -62,9 +62,10 @@ function WeddingInvitationContent() {
   }
 
   useEffect(() => {
+    // Initialize countdown on client only to avoid hydration mismatch
     const weddingDate = new Date('2025-11-29T18:00:00').getTime()
     
-    const timer = setInterval(() => {
+    const updateCountdown = () => {
       const now = new Date().getTime()
       const difference = weddingDate - now
       
@@ -78,7 +79,12 @@ function WeddingInvitationContent() {
       } else {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 })
       }
-    }, 1000)
+    }
+    
+    // Initial update
+    updateCountdown()
+    
+    const timer = setInterval(updateCountdown, 1000)
 
     return () => clearInterval(timer)
   }, [])
@@ -107,7 +113,6 @@ function WeddingInvitationContent() {
   // Initialize audio and start playing from 1:33 when component mounts
   useEffect(() => {
     const audio = new Audio('/audio/ordinary-wedding-version.mp3')
-    audio.currentTime = 93 // 1:33 in seconds
     audio.loop = true
     audio.volume = 0.3 // Set volume to 30%
     
@@ -116,17 +121,29 @@ function WeddingInvitationContent() {
     // Auto-play on user interaction
     const playAudio = () => {
       console.log('User interaction detected, attempting to play music...')
-      audio.currentTime = 93 // Ensure it starts from 1:33
-      console.log('Set audio currentTime to 93 seconds (1:33)')
-      audio.play().then(() => {
-        console.log('Music started playing successfully')
-        setIsPlaying(true)
-        document.removeEventListener('click', playAudio)
-        document.removeEventListener('touchstart', playAudio)
-      }).catch(error => {
-        console.log('Auto-play prevented:', error)
-        setIsPlaying(false)
-      })
+      
+      // Set currentTime after a small delay for mobile compatibility
+      const startPlayback = () => {
+        audio.currentTime = 93 // 1:33 in seconds
+        console.log('Set audio currentTime to 93 seconds (1:33)')
+        audio.play().then(() => {
+          console.log('Music started playing successfully')
+          setIsPlaying(true)
+          document.removeEventListener('click', playAudio)
+          document.removeEventListener('touchstart', playAudio)
+        }).catch(error => {
+          console.log('Auto-play prevented:', error)
+          setIsPlaying(false)
+        })
+      }
+      
+      // For mobile devices, ensure audio is loaded before setting currentTime
+      if (audio.readyState >= 2) {
+        startPlayback()
+      } else {
+        audio.addEventListener('loadeddata', startPlayback, { once: true })
+        audio.load() // Force load on mobile
+      }
     }
     
     // Wait for user interaction to play due to browser auto-play policies
@@ -135,10 +152,34 @@ function WeddingInvitationContent() {
     
     return () => {
       audio.pause()
+      audio.src = '' // Release audio resource
       document.removeEventListener('click', playAudio)
       document.removeEventListener('touchstart', playAudio)
     }
   }, [])
+
+  // Handle page visibility changes separately to have access to current state
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && audioRef && isPlaying) {
+        audioRef.pause()
+        console.log('App backgrounded, pausing audio')
+      } else if (!document.hidden && audioRef && isPlaying) {
+        // Only resume if it was playing before
+        audioRef.play().then(() => {
+          console.log('App foregrounded, resuming audio')
+        }).catch(error => {
+          console.log('Resume play failed:', error)
+        })
+      }
+    }
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [audioRef, isPlaying])
 
   const toggleMusic = () => {
     console.log('Toggle music clicked, audioRef:', audioRef, 'isPlaying:', isPlaying)
@@ -149,16 +190,26 @@ function WeddingInvitationContent() {
         setIsPlaying(false)
       } else {
         console.log('Attempting to play music from 1:33...')
-        // Always start from 1:33 when resuming
-        audioRef.currentTime = 93
-        audioRef.play().then(() => {
-          console.log('Music play successful!')
-          setIsPlaying(true)
-        }).catch(error => {
-          console.error('Play failed:', error)
-          console.error('Audio readyState:', audioRef.readyState)
-          console.error('Audio networkState:', audioRef.networkState)
-        })
+        
+        const startPlayback = () => {
+          audioRef.currentTime = 93 // Always start from 1:33
+          audioRef.play().then(() => {
+            console.log('Music play successful!')
+            setIsPlaying(true)
+          }).catch(error => {
+            console.error('Play failed:', error)
+            console.error('Audio readyState:', audioRef.readyState)
+            console.error('Audio networkState:', audioRef.networkState)
+          })
+        }
+        
+        // For mobile devices, ensure audio is loaded before setting currentTime
+        if (audioRef.readyState >= 2) {
+          startPlayback()
+        } else {
+          audioRef.addEventListener('loadeddata', startPlayback, { once: true })
+          audioRef.load() // Force load on mobile
+        }
       }
     } else {
       console.error('No audioRef available')
@@ -384,7 +435,7 @@ function WeddingInvitationContent() {
                 <Card className="relative bg-gradient-to-br from-white to-rose-50 shadow-lg border border-rose-100 p-8 text-center group hover:shadow-2xl hover:border-rose-200 transition-all duration-500 hover:-translate-y-2">
                   <div className="relative w-32 h-48 mx-auto overflow-hidden rounded-full bg-rose-100 ring-4 ring-rose-200/50">
                     <Image
-                      src="/images/image-2.jpeg"
+                      src="/images/image-2.jpg"
                       alt="Wedding photo 2"
                       fill
                       className="object-cover"
@@ -425,19 +476,19 @@ function WeddingInvitationContent() {
             
             <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
               <div className="bg-white/80 backdrop-blur-sm border-2 border-rose-200 rounded-lg p-6 hover:border-rose-300 transition-all duration-300">
-                <div className="text-3xl md:text-4xl font-playfair text-wedding-primary font-bold">{timeLeft.days}</div>
+                <div className="text-3xl md:text-4xl font-playfair text-wedding-primary font-bold">{timeLeft?.days ?? 0}</div>
                 <div className="text-sm md:text-base font-cormorant text-wedding-blush uppercase tracking-wider">Días</div>
               </div>
               <div className="bg-white/80 backdrop-blur-sm border-2 border-rose-200 rounded-lg p-6 hover:border-rose-300 transition-all duration-300">
-                <div className="text-3xl md:text-4xl font-playfair text-wedding-primary font-bold">{timeLeft.hours}</div>
+                <div className="text-3xl md:text-4xl font-playfair text-wedding-primary font-bold">{timeLeft?.hours ?? 0}</div>
                 <div className="text-sm md:text-base font-cormorant text-wedding-blush uppercase tracking-wider">Horas</div>
               </div>
               <div className="bg-white/80 backdrop-blur-sm border-2 border-rose-200 rounded-lg p-6 hover:border-rose-300 transition-all duration-300">
-                <div className="text-3xl md:text-4xl font-playfair text-wedding-primary font-bold">{timeLeft.minutes}</div>
+                <div className="text-3xl md:text-4xl font-playfair text-wedding-primary font-bold">{timeLeft?.minutes ?? 0}</div>
                 <div className="text-sm md:text-base font-cormorant text-wedding-blush uppercase tracking-wider">Min</div>
               </div>
               <div className="bg-white/80 backdrop-blur-sm border-2 border-rose-200 rounded-lg p-6 hover:border-rose-300 transition-all duration-300">
-                <div className="text-3xl md:text-4xl font-playfair text-wedding-primary font-bold">{timeLeft.seconds}</div>
+                <div className="text-3xl md:text-4xl font-playfair text-wedding-primary font-bold">{timeLeft?.seconds ?? 0}</div>
                 <div className="text-sm md:text-base font-cormorant text-wedding-blush uppercase tracking-wider">Seg</div>
               </div>
             </div>
@@ -986,7 +1037,7 @@ function WeddingInvitationContent() {
             
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-12 border-2 border-white/50">
               <div className="text-6xl mb-6">📸</div>
-              <div className="text-4xl md:text-6xl font-great-vibes text-wedding-primary mb-6">#LeowanderYSarah2025</div>
+              <div className="text-4xl md:text-6xl font-great-vibes text-wedding-primary mb-6">#LeowanderYSarah</div>
               <p className="text-lg text-wedding-blush font-cormorant leading-relaxed">
                 Comparte con nosotros todas tus fotografías del evento, usando nuestro hashtag oficial en todas tus publicaciones de Facebook e Instagram
               </p>
