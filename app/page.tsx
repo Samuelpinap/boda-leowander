@@ -589,7 +589,10 @@ function WeddingInvitationContent() {
                     <p className="text-lg font-semibold">Parroquia De los Santos Médicos</p>
                     <p>Cosme y Damián</p>
                     <p>Santiago, República Dominicana</p>
-                    <Button className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-2 font-cormorant">
+                    <Button 
+                      className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-2 font-cormorant"
+                      onClick={() => window.open('https://maps.app.goo.gl/1V1gAKr83ncnNkQG8', '_blank')}
+                    >
                       Ver ubicación
                     </Button>
                   </div>
@@ -603,11 +606,14 @@ function WeddingInvitationContent() {
                   <h3 className="text-2xl font-playfair text-wedding-primary font-semibold">Recepción</h3>
                   <div className="text-wedding-blush space-y-3 font-cormorant">
                     <p className="font-medium text-xl">5:00 PM</p>
-                    <p className="text-lg font-semibold">Jardín de bodas todo santiago</p>
+                    <p className="text-lg font-semibold">Jardín de bodas</p>
                     <p>Santiago, República Dominicana</p>
                     <p className="text-sm italic">Celebración, música y alegría</p>
                     <p className="text-sm italic">Cena, baile y diversión hasta altas horas</p>
-                    <Button className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-2 font-cormorant">
+                    <Button 
+                      className="mt-4 bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-2 font-cormorant"
+                      onClick={() => window.open('https://maps.app.goo.gl/rCZNpgsd8RVWQEHV9', '_blank')}
+                    >
                       Ver ubicación
                     </Button>
                   </div>

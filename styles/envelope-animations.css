@@ -57,12 +57,30 @@
     opacity: 1;
   }
   50% {
-    transform: translateY(-50px) scale(1.2);
+    transform: translateY(-50px) scale(1.1);
     opacity: 1;
   }
   100% {
-    transform: translateY(-20px) scale(1.4);
+    transform: translateY(-20px) scale(1.25);
     opacity: 1;
+  }
+}
+
+/* Mobile-optimized letter animation */
+@media (max-width: 767px) {
+  @keyframes letterDescendAndScale {
+    0% {
+      transform: translateY(-60px) scale(1.0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(-30px) scale(1.0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-16px) scale(1.0);
+      opacity: 1;
+    }
   }
 }
 
@@ -73,10 +91,22 @@
 /* Gentle floating when letter is positioned on top */
 @keyframes letterTopFloat {
   0%, 100% {
-    transform: translateY(-20px) scale(1.4);
+    transform: translateY(-20px) scale(1.25);
   }
   50% {
-    transform: translateY(-22px) scale(1.4);
+    transform: translateY(-22px) scale(1.25);
+  }
+}
+
+/* Mobile-optimized floating */
+@media (max-width: 767px) {
+  @keyframes letterTopFloat {
+    0%, 100% {
+      transform: translateY(-16px) scale(1.0);
+    }
+    50% {
+      transform: translateY(-18px) scale(1.0);
+    }
   }
 }
 
@@ -188,8 +218,23 @@
     inset 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
+/* Mobile shadow optimization */
+@media (max-width: 767px) {
+  .envelope-shadow {
+    box-shadow: 
+      0 2px 4px rgba(0, 0, 0, 0.1),
+      0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .letter-shadow {
+    box-shadow: 
+      0 1px 2px rgba(0, 0, 0, 0.1),
+      inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  }
+}
+
 /* Mobile optimizations */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .envelope-breathing {
     animation-duration: 4s; /* Slower on mobile for better performance */
   }
@@ -198,10 +243,32 @@
     transform: none; /* Disable hover effects on mobile */
   }
   
+  /* Optimize letter animations for mobile */
+  .letter-descend-scale {
+    animation-duration: 1.2s; /* Faster on mobile */
+  }
+  
+  .letter-top-float {
+    animation-duration: 2s; /* Reduce floating intensity */
+  }
+  
+  /* Prevent overflow on mobile */
+  .fixed.inset-0 {
+    overflow: hidden;
+  }
+  
+  /* Ensure content fits on small screens */
+  .letter-exit-up,
+  .letter-descend-scale {
+    max-width: 90vw;
+  }
+  
   /* Reduce motion for better mobile performance */
   @media (prefers-reduced-motion: reduce) {
     .envelope-breathing,
-    .letter-emerge,
+    .letter-exit-up,
+    .letter-descend-scale,
+    .letter-top-float,
     .envelope-shrink,
     .animate-float-bounce,
     .seal-glow {

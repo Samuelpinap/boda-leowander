@@ -25,15 +25,27 @@ export default function EnvelopeAnimation({ onComplete, children }: EnvelopeAnim
 
   // Responsive sizing classes
   const getEnvelopeSize = () => {
-    if (isMobile) return 'w-4/5 max-w-sm'
+    if (isMobile) return 'w-[90%] max-w-xs'
     if (isTablet) return 'w-3/5 max-w-md'
     return 'w-2/5 max-w-lg'
   }
 
   const getTextSize = () => {
-    if (isMobile) return 'text-xs'
+    if (isMobile) return 'text-sm'
     if (isTablet) return 'text-sm'
     return 'text-sm'
+  }
+
+  const getLetterScale = () => {
+    if (isMobile) return 'scale-100'
+    if (isTablet) return 'scale-110'
+    return 'scale-125'
+  }
+
+  const getLetterPosition = () => {
+    if (isMobile) return '-translate-y-4'
+    if (isTablet) return '-translate-y-8'
+    return '-translate-y-12'
   }
 
   if (shouldSkip) {
@@ -91,9 +103,11 @@ export default function EnvelopeAnimation({ onComplete, children }: EnvelopeAnim
           >
             {/* Letter Content */}
             <div
-              className={`flex flex-col items-center py-8 px-6 justify-center bg-gradient-to-br from-orange-50 to-amber-50 w-full h-full absolute border-2 border-wedding-accent shadow-2xl rounded-lg ${
+              className={`flex flex-col items-center py-4 px-4 justify-center bg-gradient-to-br from-orange-50 to-amber-50 w-full absolute border-2 border-wedding-accent shadow-2xl rounded-lg ${
+                isMobile ? 'h-[150%]' : 'h-full'
+              } ${
                 animationState === 'letter-out' ? 'letter-exit-up z-50' :
-                animationState === 'letter-visible' ? 'letter-descend-scale letter-top-float z-50' :
+                animationState === 'letter-visible' ? `letter-descend-scale letter-top-float z-50 ${getLetterScale()} ${getLetterPosition()}` :
                 'z-10 translate-y-0 scale-75 opacity-0'
               }`}
             >
@@ -102,38 +116,38 @@ export default function EnvelopeAnimation({ onComplete, children }: EnvelopeAnim
                 animationState === 'letter-visible' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}>
                 {/* Letter header */}
-                <div className="mb-6">
-                  <div className="text-wedding-accent text-lg mb-3">✦ ❤ ✦</div>
-                  <h3 className="text-xl font-dancing text-wedding-primary mb-3">
+                <div className={`${isMobile ? 'mb-3' : 'mb-6'}`}>
+                  <div className={`text-wedding-accent ${isMobile ? 'text-base' : 'text-lg'} ${isMobile ? 'mb-2' : 'mb-3'}`}>✦ ❤ ✦</div>
+                  <h3 className={`${isMobile ? 'text-lg' : 'text-xl'} font-dancing text-wedding-primary ${isMobile ? 'mb-2' : 'mb-3'}`}>
                     ¡Querid{personalizedData?.gender === 'a' ? 'a' : 'o'} {personalizedData?.name || 'Invitado'}!
                   </h3>
                 </div>
 
                 {/* Letter body */}
-                <div className={`space-y-3 ${getTextSize()} leading-relaxed text-wedding-blush font-playfair max-w-sm`}>
+                <div className={`${isMobile ? 'space-y-2' : 'space-y-3'} ${getTextSize()} leading-relaxed text-wedding-blush font-playfair ${isMobile ? 'max-w-xs' : 'max-w-sm'}`}>
                   <p>Nos complace enormemente invitarte a nuestra celebración de amor.</p>
                   <p>Tu presencia hará que este día sea aún más especial.</p>
                   {personalizedData && personalizedData.guestCount > 1 && (
                     <p>Puedes traer {personalizedData.guestCount - 1} acompañante{personalizedData.guestCount > 2 ? 's' : ''} contigo.</p>
                   )}
-                  <div className="py-3">
-                    <div className="text-wedding-accent text-lg">♥</div>
+                  <div className={`${isMobile ? 'py-2' : 'py-3'}`}>
+                    <div className={`text-wedding-accent ${isMobile ? 'text-base' : 'text-lg'}`}>♥</div>
                   </div>
-                  <p className="font-dancing text-base">Con amor,</p>
-                  <p className="font-dancing text-xl text-wedding-primary">Leowander & Sarah</p>
-                  <div className="text-xs text-wedding-blush mt-4 space-y-1">
+                  <p className={`font-dancing ${isMobile ? 'text-sm' : 'text-base'}`}>Con amor,</p>
+                  <p className={`font-dancing ${isMobile ? 'text-lg' : 'text-xl'} text-wedding-primary`}>Leowander & Sarah</p>
+                  <div className={`${isMobile ? 'text-xs' : 'text-xs'} text-wedding-blush ${isMobile ? 'mt-2' : 'mt-4'} space-y-1`}>
                     <p>29 de Noviembre, 2025</p>
                     <p>Santiago, República Dominicana</p>
                   </div>
                 </div>
 
                 {/* Action button */}
-                <div className={`mt-6 transition-all duration-500 delay-1000 ${
+                <div className={`${isMobile ? 'mt-3' : 'mt-6'} transition-all duration-500 delay-1000 ${
                   animationState === 'letter-visible' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}>
                   <Button
                     onClick={handleContinue}
-                    className="bg-gradient-to-r from-wedding-primary to-wedding-accent hover:from-wedding-accent hover:to-wedding-secondary text-white px-6 py-2 rounded-full font-dancing text-sm shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    className={`bg-gradient-to-r from-wedding-primary to-wedding-accent hover:from-wedding-accent hover:to-wedding-secondary text-white ${isMobile ? 'px-4 py-2 text-xs' : 'px-6 py-2 text-sm'} rounded-full font-dancing shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}
                   >
                     Ver más detalles ✨
                   </Button>
