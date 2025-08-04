@@ -6,18 +6,20 @@ if (!process.env.MONGODB_URI) {
 
 const uri: string = process.env.MONGODB_URI
 const options = {
-  serverSelectionTimeoutMS: 10000, // Reduced from 30s to 10s
-  socketTimeoutMS: 20000, // Reduced from 45s to 20s
-  connectTimeoutMS: 10000, // Reduced from 30s to 10s
+  serverSelectionTimeoutMS: 5000, // Further reduced for faster failures
+  socketTimeoutMS: 10000, // Reduced timeout
+  connectTimeoutMS: 5000, // Faster connection timeout
   retryWrites: true,
   w: 'majority',
-  maxPoolSize: 3, // Reduced pool size for development
-  minPoolSize: 1,
-  maxIdleTimeMS: 10000, // Reduced from 30s to 10s
-  waitQueueTimeoutMS: 10000, // Reduced from 30s to 10s
-  // Additional options for better reliability
-  heartbeatFrequencyMS: 2000,
-  serverMonitoringMode: 'auto'
+  maxPoolSize: 2, // Smaller pool for free tier
+  minPoolSize: 0, // No minimum connections for free tier
+  maxIdleTimeMS: 5000, // Shorter idle time
+  waitQueueTimeoutMS: 5000, // Faster queue timeout
+  // Optimizations for free tier
+  heartbeatFrequencyMS: 10000, // Less frequent heartbeats
+  serverMonitoringMode: 'poll', // More efficient for free tier
+  compressors: ['zlib'], // Enable compression
+  zlibCompressionLevel: 6
 }
 
 let client: MongoClient

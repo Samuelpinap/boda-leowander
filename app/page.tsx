@@ -310,16 +310,7 @@ function WeddingInvitationContent() {
       
       if (result.success) {
         const guestList = formData.names.filter(name => name.trim()).join(", ")
-        
-        // Check if it was a fallback save (database was down)
-        if (result.fallback) {
-          toast.success(
-            `¡Gracias por confirmar!\n\nHemos recibido tu confirmación para: ${guestList}\n\nNota: El sistema está temporalmente lento. Si tienes dudas, contacta a los novios.`,
-            { duration: 6000, icon: '📝' }
-          )
-        } else {
-          toast.success(`¡Gracias por confirmar tu asistencia!\n\nAsistentes: ${guestList}`)
-        }
+        toast.success(`¡Gracias por confirmar tu asistencia!\n\nAsistentes: ${guestList}`)
         
         // Reset form after successful submission
         const resetNames = Array(formData.guestCount).fill("")
@@ -336,7 +327,15 @@ function WeddingInvitationContent() {
           guestCount: formData.guestCount,
         })
       } else {
-        toast.error(`Error al enviar la confirmación: ${result.error}`)
+        // Check if it's a database error
+        if (result.dbError) {
+          toast.error(
+            'El sistema no está disponible en este momento. Por favor, intenta más tarde o contacta directamente a Leowander & Sarah por WhatsApp.',
+            { duration: 8000, icon: '❌' }
+          )
+        } else {
+          toast.error(`Error al enviar la confirmación: ${result.error}`)
+        }
       }
     } catch (error) {
       console.error('Error submitting RSVP:', error)
@@ -423,18 +422,18 @@ function WeddingInvitationContent() {
       const result = await response.json()
       
       if (result.success) {
-        // Check if it was a fallback save (database was down)
-        if (result.fallback) {
-          toast.success(
-            `¡Gracias por tus buenos deseos, ${wellWishForm.name}! ♥\n\nNota: El sistema está temporalmente lento. Tu mensaje ha sido recibido.`,
-            { duration: 6000, icon: '💝' }
-          )
-        } else {
-          toast.success(`¡Gracias por tus buenos deseos, ${wellWishForm.name}! ♥`)
-        }
+        toast.success(`¡Gracias por tus buenos deseos, ${wellWishForm.name}! ♥`)
         setWellWishForm({ name: "", email: "", message: "" })
       } else {
-        toast.error(`Error al enviar el mensaje: ${result.error}`)
+        // Check if it's a database error
+        if (result.dbError) {
+          toast.error(
+            'El sistema no está disponible en este momento. Por favor, intenta más tarde o contacta directamente a Leowander & Sarah por WhatsApp.',
+            { duration: 8000, icon: '❌' }
+          )
+        } else {
+          toast.error(`Error al enviar el mensaje: ${result.error}`)
+        }
       }
     } catch (error) {
       console.error('Error submitting well wish:', error)

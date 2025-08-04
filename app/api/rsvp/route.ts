@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       db = await Promise.race([
         getDatabase(),
         new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+          setTimeout(() => reject(new Error('Database connection timeout')), 8000)
         )
       ]) as any
       
@@ -65,27 +65,12 @@ export async function POST(request: NextRequest) {
     } catch (dbError) {
       console.error('Database error:', dbError)
       
-      // Log the RSVP locally as fallback
-      console.log('FALLBACK - RSVP received:', {
-        email: body.email,
-        names: validNames,
-        response: body.response,
-        guestCount: body.guestCount,
-        timestamp: body.timestamp || new Date().toISOString()
-      })
-      
-      // Return success to user even if database is down
+      // Return error to user when database is down
       return NextResponse.json({
-        success: true,
-        message: 'RSVP received successfully',
-        data: {
-          email: body.email,
-          names: validNames,
-          response: body.response,
-          guestCount: body.guestCount
-        },
-        fallback: true
-      })
+        success: false,
+        error: 'El sistema no está disponible en este momento. Por favor, intenta más tarde o contacta directamente a Leowander & Sarah.',
+        dbError: true
+      }, { status: 503 })
     }
 
     const rsvpData: RSVPData = {
@@ -143,7 +128,7 @@ export async function GET() {
     const db = await Promise.race([
       getDatabase(),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+        setTimeout(() => reject(new Error('Database connection timeout')), 8000)
       )
     ]) as any
     

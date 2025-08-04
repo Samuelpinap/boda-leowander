@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       const db = await Promise.race([
         getDatabase(),
         new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Database connection timeout')), 10000)
+          setTimeout(() => reject(new Error('Database connection timeout')), 5000)
         )
       ]) as any
       

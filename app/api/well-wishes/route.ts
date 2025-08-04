@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       const db = await Promise.race([
         getDatabase(),
         new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+          setTimeout(() => reject(new Error('Database connection timeout')), 8000)
         )
       ]) as any
       
@@ -45,23 +45,12 @@ export async function POST(request: NextRequest) {
     } catch (dbError) {
       console.error('Database error:', dbError)
       
-      // Log the wish locally as fallback
-      console.log('FALLBACK - Well wish received:', {
-        name: wellWishData.name,
-        message: wellWishData.message,
-        timestamp: wellWishData.timestamp
-      })
-      
-      // Return success to user even if database is down
+      // Return error to user when database is down
       return NextResponse.json({
-        success: true,
-        message: 'Well wish received successfully',
-        data: {
-          name: wellWishData.name,
-          message: wellWishData.message
-        },
-        fallback: true
-      })
+        success: false,
+        error: 'El sistema no está disponible en este momento. Por favor, intenta más tarde o contacta directamente a Leowander & Sarah.',
+        dbError: true
+      }, { status: 503 })
     }
 
   } catch (error) {
@@ -79,7 +68,7 @@ export async function GET() {
     const db = await Promise.race([
       getDatabase(),
       new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+        setTimeout(() => reject(new Error('Database connection timeout')), 8000)
       )
     ]) as any
     
