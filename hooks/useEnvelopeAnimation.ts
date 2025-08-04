@@ -96,19 +96,17 @@ export function useEnvelopeAnimation(onComplete?: () => void): EnvelopeAnimation
   }, [shouldSkip])
 
   const handleEnvelopeClick = useCallback(() => {
+    console.log('Envelope clicked! Current state:', animationState)
     if (animationState === 'initial') {
+      console.log('Processing click - changing to letter-visible')
       playEnvelopeSound('open')
-      setAnimationState('opening')
       
+      // Simplified animation - directly show the letter card after a short delay
       setTimeout(() => {
-        playEnvelopeSound('unfold')
-        setAnimationState('letter-out')
-        
-        setTimeout(() => {
-          playEnvelopeSound('emerge')
-          setAnimationState('letter-visible')
-        }, 800)
-      }, 600)
+        playEnvelopeSound('emerge')
+        setAnimationState('letter-visible')
+        console.log('Animation state changed to letter-visible')
+      }, 500)
     }
   }, [animationState])
 
