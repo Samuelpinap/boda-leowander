@@ -43,6 +43,11 @@ function WeddingInvitationContent() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [audioRef, setAudioRef] = useState<HTMLAudioElement | null>(null)
   const [showMainContent, setShowMainContent] = useState(false)
+  const [wellWishForm, setWellWishForm] = useState({
+    name: "",
+    email: "",
+    message: ""
+  })
 
   // Handlers for SearchParamsHandler
   const handleInvitationUpdate = (data: { invitedBy: string; guestCount: number; isValid: boolean }) => {
@@ -216,7 +221,7 @@ function WeddingInvitationContent() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     // Validate all names are filled
@@ -241,18 +246,34 @@ function WeddingInvitationContent() {
       timestamp: new Date().toISOString(),
     }
     
-    console.log("RSVP submitted:", submitData)
-    
-    // Here you would normally send to your database
-    // Example API call:
-    // fetch('/api/rsvp', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(submitData)
-    // })
-    
-    const guestList = formData.names.filter(name => name.trim()).join(", ")
-    alert(`¡Gracias por confirmar tu asistencia!\n\nAsistentes: ${guestList}`)
+    try {
+      const response = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submitData)
+      })
+      
+      const result = await response.json()
+      
+      if (result.success) {
+        const guestList = formData.names.filter(name => name.trim()).join(", ")
+        alert(`¡Gracias por confirmar tu asistencia!\n\nAsistentes: ${guestList}`)
+        
+        // Reset form after successful submission
+        setFormData({
+          names: Array(formData.guestCount).fill(""),
+          email: "",
+          response: "",
+          message: "",
+          guestCount: formData.guestCount,
+        })
+      } else {
+        alert(`Error al enviar la confirmación: ${result.error}`)
+      }
+    } catch (error) {
+      console.error('Error submitting RSVP:', error)
+      alert('Error al enviar la confirmación. Por favor, intenta de nuevo.')
+    }
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -297,6 +318,48 @@ function WeddingInvitationContent() {
 
   const handleEnvelopeComplete = () => {
     setShowMainContent(true)
+  }
+
+  const handleWellWishSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!wellWishForm.name.trim() || !wellWishForm.message.trim()) {
+      alert("Por favor, completa tu nombre y mensaje.")
+      return
+    }
+    
+    try {
+      const response = await fetch('/api/well-wishes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: wellWishForm.name.trim(),
+          email: wellWishForm.email.trim(),
+          message: wellWishForm.message.trim(),
+          timestamp: new Date().toISOString()
+        })
+      })
+      
+      const result = await response.json()
+      
+      if (result.success) {
+        alert(`¡Gracias por tus buenos deseos, ${wellWishForm.name}!`)
+        setWellWishForm({ name: "", email: "", message: "" })
+      } else {
+        alert(`Error al enviar el mensaje: ${result.error}`)
+      }
+    } catch (error) {
+      console.error('Error submitting well wish:', error)
+      alert('Error al enviar el mensaje. Por favor, intenta de nuevo.')
+    }
+  }
+
+  const handleWellWishChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setWellWishForm(prev => ({
+      ...prev,
+      [name]: value
+    }))
   }
 
   const mainContent = (
@@ -655,7 +718,7 @@ function WeddingInvitationContent() {
 
               {/* Pinterest Link */}
               <div className="text-center">
-                <p className="text-wedding-blush font-cormorant mb-3 text-sm">Para inspiración:</p>
+                <p className="text-wedding-blush font-cormorant mb-3 text-sm font-bold">Para inspiración:</p>
                 <Button 
                   className="bg-wedding-primary hover:bg-wedding-blush text-white px-4 py-2 font-cormorant text-sm rounded-lg shadow-lg inline-flex items-center"
                   onClick={() => window.open('https://pin.it/9uXupRDgz', '_blank')}
@@ -872,15 +935,57 @@ function WeddingInvitationContent() {
               
 
               <Card className="p-8 bg-gradient-to-br from-white to-rose-50 border-2 border-rose-100 hover:border-rose-200 transition-all duration-300 hover:shadow-lg">
-                <div className="space-y-4 text-center">
-                  <div className="text-wedding-accent text-6xl mb-4">✍️</div>
-                  <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">Enviar Buenos Deseos</h3>
-                  <p className="text-wedding-blush font-cormorant text-sm mb-6 leading-relaxed">
-                    Comparte tus mejores deseos y bendiciones para nuestra nueva vida juntos
-                  </p>
-                  <Button className="bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-3 font-cormorant text-lg rounded-lg shadow-lg">
-                    Enviar Buenos Deseos
-                  </Button>
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <div className="text-wedding-accent text-6xl mb-4">✍️</div>
+                    <h3 className="text-2xl font-playfair text-wedding-primary font-semibold mb-4">Enviar Buenos Deseos</h3>
+                    <p className="text-wedding-blush font-cormorant text-sm mb-6 leading-relaxed">
+                      Comparte tus mejores deseos y bendiciones para nuestra nueva vida juntos
+                    </p>
+                  </div>
+                  
+                  <form onSubmit={handleWellWishSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">Tu nombre *</label>
+                      <Input
+                        name="name"
+                        type="text"
+                        value={wellWishForm.name}
+                        onChange={handleWellWishChange}
+                        className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
+                        placeholder="Escribe tu nombre"
+                        required
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">Email (opcional)</label>
+                      <Input
+                        name="email"
+                        type="email"
+                        value={wellWishForm.email}
+                        onChange={handleWellWishChange}
+                        className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
+                        placeholder="tu@email.com"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">Tu mensaje *</label>
+                      <Textarea
+                        name="message"
+                        value={wellWishForm.message}
+                        onChange={handleWellWishChange}
+                        className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 min-h-[100px] rounded-lg font-cormorant"
+                        placeholder="Comparte tus mejores deseos para los novios..."
+                        required
+                      />
+                    </div>
+                    
+                    <Button type="submit" className="w-full bg-wedding-primary hover:bg-wedding-blush text-white px-6 py-3 font-cormorant text-lg rounded-lg shadow-lg">
+                      ♥ Enviar Buenos Deseos ♥
+                    </Button>
+                  </form>
                 </div>
               </Card>
 

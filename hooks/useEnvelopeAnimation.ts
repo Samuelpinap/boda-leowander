@@ -33,14 +33,9 @@ export function useEnvelopeAnimation(onComplete?: () => void): EnvelopeAnimation
 
   // Parse URL parameters and check if animation should be skipped
   useEffect(() => {
-    const registered = searchParams.get('registered')
-    const hasViewed = sessionStorage.getItem('envelope-viewed')
-    
-    if (registered || hasViewed) {
-      setShouldSkip(true)
-      setShowFloatingButton(!!hasViewed)
-      return
-    }
+    // Remove the skip logic - envelope animation will always show
+    setShouldSkip(false)
+    setShowFloatingButton(false)
 
     // Parse personalization data
     const inviteParam = searchParams.get('invite')
