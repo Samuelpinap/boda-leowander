@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import "./globals.css"
 import { Playfair_Display, Dancing_Script, Great_Vibes, Cormorant_Garamond } from "next/font/google"
+import { Toaster } from "react-hot-toast"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -103,7 +104,47 @@ html {
 }
         `}</style>
       </head>
-      <body className={`${playfair.variable} ${dancing.variable} ${greatVibes.variable} ${cormorant.variable} bg-background text-foreground`}>{children}</body>
+      <body className={`${playfair.variable} ${dancing.variable} ${greatVibes.variable} ${cormorant.variable} bg-background text-foreground`}>
+        {children}
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: 'linear-gradient(to right, #f8fafc, #f1f5f9)',
+              color: '#be185d',
+              border: '2px solid #fda4af',
+              borderRadius: '12px',
+              fontFamily: 'var(--font-cormorant)',
+              fontSize: '16px',
+              padding: '16px 20px',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            },
+            success: {
+              style: {
+                background: 'linear-gradient(to right, #f0fdf4, #dcfce7)',
+                color: '#166534',
+                border: '2px solid #86efac',
+              },
+              iconTheme: {
+                primary: '#22c55e',
+                secondary: '#ffffff'
+              }
+            },
+            error: {
+              style: {
+                background: 'linear-gradient(to right, #fef2f2, #fee2e2)',
+                color: '#dc2626',
+                border: '2px solid #fca5a5',
+              },
+              iconTheme: {
+                primary: '#ef4444',
+                secondary: '#ffffff'
+              }
+            }
+          }}
+        />
+      </body>
     </html>
   )
 }

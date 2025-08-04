@@ -23,8 +23,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // The invited person is passed in the body or defaults to the first name
+    const invitedPersonName = body.invitedPerson || validNames[0].trim()
+
     // Try to connect to database with timeout handling
-    let db, collection, existingRSVP
+    let db, collection, existingRSVP, existingPerson
     try {
       db = await Promise.race([
         getDatabase(),
@@ -34,8 +37,31 @@ export async function POST(request: NextRequest) {
       ]) as any
       
       collection = db.collection('invitados')
-      // Check if email already exists (update existing RSVP)
-      existingRSVP = await collection.findOne({ email: body.email })
+      
+      // Try to check for existing person with error handling
+      try {
+        // Check if the invited person already has an RSVP (case-insensitive)
+        // Escape special regex characters in the name
+        const escapedName = invitedPersonName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        existingPerson = await collection.findOne({ 
+          invitedPerson: { $regex: new RegExp(`^${escapedName}$`, 'i') }
+        })
+        
+        if (existingPerson && existingPerson.email !== body.email) {
+          return NextResponse.json(
+            { error: `${invitedPersonName} ya ha confirmado su asistencia con otro email.` },
+            { status: 400 }
+          )
+        }
+        
+        // Check if email already exists (update existing RSVP)
+        existingRSVP = await collection.findOne({ email: body.email })
+      } catch (queryError) {
+        console.log('Query error (non-critical):', queryError)
+        // Continue without duplicate checking if query fails
+        existingRSVP = null
+        existingPerson = null
+      }
     } catch (dbError) {
       console.error('Database error:', dbError)
       
@@ -64,6 +90,7 @@ export async function POST(request: NextRequest) {
 
     const rsvpData: RSVPData = {
       email: body.email,
+      invitedPerson: invitedPersonName,
       names: validNames,
       response: body.response,
       message: body.message || '',

@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import SearchParamsHandler from "@/components/SearchParamsHandler"
 import EnvelopeAnimation from "@/components/EnvelopeAnimation"
+import toast from "react-hot-toast"
 
 function WeddingInvitationContent() {
   const [invitationData, setInvitationData] = useState({
@@ -59,12 +60,33 @@ function WeddingInvitationContent() {
   }
 
   const handleFormDataUpdate = (guestCount: number) => {
-    setFormData(prev => ({
-      ...prev,
-      guestCount: guestCount,
-      names: Array(guestCount).fill("")
-    }))
+    setFormData(prev => {
+      const names = Array(guestCount).fill("")
+      // Preserve existing names where possible
+      for (let i = 0; i < Math.min(guestCount, prev.names.length); i++) {
+        names[i] = prev.names[i] || ""
+      }
+      return {
+        ...prev,
+        guestCount: guestCount,
+        names: names
+      }
+    })
   }
+
+  // Update first name when personalized invite data changes
+  useEffect(() => {
+    if (personalizedInvite.isPersonalized && personalizedInvite.name) {
+      setFormData(prev => {
+        const newNames = [...prev.names]
+        newNames[0] = personalizedInvite.name
+        return {
+          ...prev,
+          names: newNames
+        }
+      })
+    }
+  }, [personalizedInvite.isPersonalized, personalizedInvite.name])
 
   useEffect(() => {
     // Initialize countdown on client only to avoid hydration mismatch
@@ -227,13 +249,44 @@ function WeddingInvitationContent() {
     // Validate all names are filled
     const emptyNames = formData.names.some((name, index) => !name.trim())
     if (emptyNames) {
-      alert("Por favor, completa todos los nombres de los asistentes.")
+      toast.error("Por favor, completa todos los nombres de los asistentes.")
       return
+    }
+    
+    const filteredNames = formData.names.filter(name => name.trim())
+    const invitedPersonName = filteredNames[0] // The first name is always the invited person
+    
+    // Check if the invited person already has an RSVP
+    let skipDuplicateCheck = false
+    try {
+      const checkResponse = await fetch('/api/rsvp/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ invitedPerson: invitedPersonName })
+      })
+      
+      if (checkResponse.ok) {
+        const checkResult = await checkResponse.json()
+        
+        if (checkResult.exists && checkResult.email !== formData.email) {
+          toast.error(`${invitedPersonName} ya ha confirmado su asistencia con el email ${checkResult.email}`)
+          return
+        }
+      } else {
+        // If check fails, continue anyway
+        skipDuplicateCheck = true
+        console.log('RSVP check failed, continuing with submission')
+      }
+    } catch (error) {
+      // If check fails, continue anyway
+      skipDuplicateCheck = true
+      console.log('Could not check for existing RSVP, proceeding anyway:', error)
     }
     
     const submitData = {
       email: formData.email,
-      names: formData.names.filter(name => name.trim()), // Remove empty names
+      invitedPerson: invitedPersonName, // Store the invited person's name
+      names: filteredNames, // All attendees including the invited person
       response: formData.response,
       message: formData.message,
       guestCount: formData.guestCount,
@@ -257,22 +310,40 @@ function WeddingInvitationContent() {
       
       if (result.success) {
         const guestList = formData.names.filter(name => name.trim()).join(", ")
-        alert(`¡Gracias por confirmar tu asistencia!\n\nAsistentes: ${guestList}`)
+        
+        // Check if it was a fallback save (database was down)
+        if (result.fallback) {
+          toast.success(
+            `¡Gracias por confirmar!\n\nHemos recibido tu confirmación para: ${guestList}\n\nNota: El sistema está temporalmente lento. Si tienes dudas, contacta a los novios.`,
+            { duration: 6000, icon: '📝' }
+          )
+        } else {
+          toast.success(`¡Gracias por confirmar tu asistencia!\n\nAsistentes: ${guestList}`)
+        }
         
         // Reset form after successful submission
+        const resetNames = Array(formData.guestCount).fill("")
+        // Preserve personalized invite name
+        if (personalizedInvite.isPersonalized && personalizedInvite.name) {
+          resetNames[0] = personalizedInvite.name
+        }
+        
         setFormData({
-          names: Array(formData.guestCount).fill(""),
+          names: resetNames,
           email: "",
           response: "",
           message: "",
           guestCount: formData.guestCount,
         })
       } else {
-        alert(`Error al enviar la confirmación: ${result.error}`)
+        toast.error(`Error al enviar la confirmación: ${result.error}`)
       }
     } catch (error) {
       console.error('Error submitting RSVP:', error)
-      alert('Error al enviar la confirmación. Por favor, intenta de nuevo.')
+      toast.error(
+        'No pudimos procesar tu confirmación en este momento. Por favor, intenta en unos minutos o contacta directamente a Leowander & Sarah.',
+        { duration: 6000, icon: '⚠️' }
+      )
     }
   }
 
@@ -288,16 +359,20 @@ function WeddingInvitationContent() {
       
       // Update names array when guest count changes
       const newNames = Array(count).fill("")
-      // Preserve existing names if reducing count
+      // Preserve existing names
       for (let i = 0; i < Math.min(count, formData.names.length); i++) {
         newNames[i] = formData.names[i] || ""
       }
+      // If we have a personalized invite, ensure the first name stays
+      if (personalizedInvite.isPersonalized && personalizedInvite.name) {
+        newNames[0] = personalizedInvite.name
+      }
       
-      setFormData({
-        ...formData,
+      setFormData(prev => ({
+        ...prev,
         guestCount: count,
         names: newNames
-      })
+      }))
       return
     }
     
@@ -308,12 +383,17 @@ function WeddingInvitationContent() {
   }
 
   const handleNameChange = (index: number, value: string) => {
+    // Prevent editing the first name if it's a personalized invite
+    if (index === 0 && personalizedInvite.isPersonalized) {
+      return
+    }
+    
     const newNames = [...formData.names]
     newNames[index] = value
-    setFormData({
-      ...formData,
+    setFormData(prev => ({
+      ...prev,
       names: newNames
-    })
+    }))
   }
 
   const handleEnvelopeComplete = () => {
@@ -324,7 +404,7 @@ function WeddingInvitationContent() {
     e.preventDefault()
     
     if (!wellWishForm.name.trim() || !wellWishForm.message.trim()) {
-      alert("Por favor, completa tu nombre y mensaje.")
+      toast.error("Por favor, completa tu nombre y mensaje.")
       return
     }
     
@@ -343,14 +423,25 @@ function WeddingInvitationContent() {
       const result = await response.json()
       
       if (result.success) {
-        alert(`¡Gracias por tus buenos deseos, ${wellWishForm.name}!`)
+        // Check if it was a fallback save (database was down)
+        if (result.fallback) {
+          toast.success(
+            `¡Gracias por tus buenos deseos, ${wellWishForm.name}! ♥\n\nNota: El sistema está temporalmente lento. Tu mensaje ha sido recibido.`,
+            { duration: 6000, icon: '💝' }
+          )
+        } else {
+          toast.success(`¡Gracias por tus buenos deseos, ${wellWishForm.name}! ♥`)
+        }
         setWellWishForm({ name: "", email: "", message: "" })
       } else {
-        alert(`Error al enviar el mensaje: ${result.error}`)
+        toast.error(`Error al enviar el mensaje: ${result.error}`)
       }
     } catch (error) {
       console.error('Error submitting well wish:', error)
-      alert('Error al enviar el mensaje. Por favor, intenta de nuevo.')
+      toast.error(
+        'No pudimos procesar tu mensaje en este momento. Por favor, intenta en unos minutos o contacta directamente a Leowander & Sarah.',
+        { duration: 6000, icon: '⚠️' }
+      )
     }
   }
 
@@ -384,7 +475,7 @@ function WeddingInvitationContent() {
                 }`}>
                   NOS COMPLACE INVITARLE A NUESTRA BODA
                 </div>
-                <div className={`text-3xl md:text-4xl font-great-vibes tracking-wide transition-colors duration-500 ${
+                <div className={`text-3xl md:text-4xl font-great-vibes tracking-wide text-center transition-colors duration-500 ${
                   isScrolled ? 'text-wedding-primary' : 'text-white'
                 }`}>
                   Leowander <span className={`font-dancing text-4xl md:text-5xl mx-3 transition-colors duration-500 ${
@@ -467,8 +558,8 @@ function WeddingInvitationContent() {
             <div className="flex flex-col lg:flex-row items-center gap-12">
               {/* Left side - Title */}
               <div className="lg:w-1/3 animate-slide-up">
-                <div className="relative">
-                  <h2 className="text-6xl md:text-7xl font-playfair text-wedding-primary leading-tight">
+                <div className="relative ">
+                  <h2 className="text-6xl text-center md:text-7xl font-playfair text-wedding-primary leading-tight">
                     LEOWANDER
                     <br />
                     &
@@ -1048,15 +1139,16 @@ function WeddingInvitationContent() {
                       Nombres de los Asistentes
                     </label>
                     {formData.names.map((name, index) => (
-                      <div key={index} className="space-y-2">
+                      <div key={`guest-${index}`} className="space-y-2">
                         <label className="text-xs text-wedding-blush font-cormorant">
-                          {index === 0 ? "Tu nombre completo" : `Acompañante ${index}`}
+                          {index === 0 ? "Persona invitada" : `Acompañante ${index}`}
                         </label>
                         <Input
                           value={name}
                           onChange={(e) => handleNameChange(index, e.target.value)}
-                          className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
-                          placeholder={index === 0 ? "Tu nombre completo" : `Nombre del acompañante ${index}`}
+                          className={`border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg ${index === 0 && personalizedInvite.isPersonalized ? 'bg-rose-50' : ''}`}
+                          placeholder={index === 0 ? "Nombre de la persona invitada" : `Nombre del acompañante ${index}`}
+                          readOnly={index === 0 && personalizedInvite.isPersonalized}
                           required
                         />
                       </div>

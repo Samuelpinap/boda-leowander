@@ -1,7 +1,8 @@
 export interface RSVPData {
   _id?: string
   email: string
-  names: string[]
+  invitedPerson: string  // The main person who was invited (first name)
+  names: string[]        // All attendees including the invited person
   response: 'yes' | 'no'
   message?: string
   guestCount: number
