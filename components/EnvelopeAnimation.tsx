@@ -113,7 +113,7 @@ export default function EnvelopeAnimation({ onComplete, children }: EnvelopeAnim
               type="button"
             >
               <img 
-                src="/images/envelope.PNG" 
+                src="/images/envelope-s.PNG" 
                 alt="Wedding invitation envelope"
                 className="w-full h-auto rounded-lg shadow-2xl"
               />
