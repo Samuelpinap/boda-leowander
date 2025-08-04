@@ -995,21 +995,21 @@ function WeddingInvitationContent() {
       </section>
 
       {/* RSVP Section */}
-      <section id="rsvp" className="py-20 bg-gradient-to-br from-rose-50 via-blush-50 to-pink-100 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 text-9xl text-rose-300 font-great-vibes transform -rotate-12">♥</div>
-          <div className="absolute bottom-0 right-0 text-9xl text-rose-300 font-great-vibes transform rotate-12">♥</div>
-          <div className="absolute top-1/2 left-1/3 text-6xl text-rose-200 font-great-vibes">❦</div>
-        </div>
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="max-w-2xl mx-auto">
-            <div className="text-center mb-12">
-              <div className="mb-4">
-                <div className="text-wedding-accent text-lg font-cormorant tracking-[0.3em] mb-2">✦ ÚNETE A NUESTRA CELEBRACIÓN ✦</div>
-              </div>
-              <h2 className="text-4xl md:text-5xl font-great-vibes text-wedding-primary mb-6">Confirmar Asistencia</h2>
-              
-              {invitationData.isValid ? (
+      {invitationData.isValid && (
+        <section id="rsvp" className="py-20 bg-gradient-to-br from-rose-50 via-blush-50 to-pink-100 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 left-0 text-9xl text-rose-300 font-great-vibes transform -rotate-12">♥</div>
+            <div className="absolute bottom-0 right-0 text-9xl text-rose-300 font-great-vibes transform rotate-12">♥</div>
+            <div className="absolute top-1/2 left-1/3 text-6xl text-rose-200 font-great-vibes">❦</div>
+          </div>
+          <div className="container mx-auto px-6 relative z-10">
+            <div className="max-w-2xl mx-auto">
+              <div className="text-center mb-12">
+                <div className="mb-4">
+                  <div className="text-wedding-accent text-lg font-cormorant tracking-[0.3em] mb-2">✦ ÚNETE A NUESTRA CELEBRACIÓN ✦</div>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-great-vibes text-wedding-primary mb-6">Confirmar Asistencia</h2>
+                
                 <div className="mb-6 p-4 bg-wedding-primary/10 rounded-lg border border-wedding-accent/20">
                   <p className="text-wedding-primary font-cormorant text-lg">
                     ¡Hola! Has sido invitado/a por <span className="font-semibold capitalize">{invitationData.invitedBy}</span>
@@ -1018,120 +1018,109 @@ function WeddingInvitationContent() {
                     Invitación para {invitationData.guestCount} persona{invitationData.guestCount > 1 ? 's' : ''}
                   </p>
                 </div>
-              ) : (
-                <div className="mb-6 p-4 bg-wedding-sage/10 rounded-lg border border-wedding-sage/20">
-                  <p className="text-wedding-sage font-cormorant text-lg">
-                    👋 ¡Bienvenido! Para confirmar tu asistencia, necesitas un enlace de invitación personalizado.
-                  </p>
-                  <p className="text-wedding-blush font-cormorant text-sm mt-1">
-                    Si no tienes uno, por favor contacta a los novios.
-                  </p>
+                
+                <p className="text-lg text-wedding-blush font-cormorant italic">Tu presencia hará que este día sea aún más especial. Por favor, confirma tu asistencia antes del 15 de Noviembre, 2025.</p>
+                <div className="flex justify-center items-center space-x-4 mt-6">
+                  <div className="h-px bg-rose-300 w-12"></div>
+                  <div className="text-wedding-accent text-lg">♡</div>
+                  <div className="h-px bg-rose-300 w-12"></div>
                 </div>
-              )}
-              
-              <p className="text-lg text-wedding-blush font-cormorant italic">Tu presencia hará que este día sea aún más especial. Por favor, confirma tu asistencia antes del 15 de Noviembre, 2025.</p>
-              <div className="flex justify-center items-center space-x-4 mt-6">
-                <div className="h-px bg-rose-300 w-12"></div>
-                <div className="text-wedding-accent text-lg">♡</div>
-                <div className="h-px bg-rose-300 w-12"></div>
               </div>
-            </div>
 
-            <Card className="bg-gradient-to-br from-white to-rose-50 shadow-2xl border-2 border-rose-100 p-10 rounded-2xl">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Email field */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">Correo Electrónico de Contacto</label>
-                  <Input
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
-                    required
-                  />
-                </div>
-
-                {/* Dynamic name fields */}
-                <div className="space-y-4">
-                  <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">
-                    Nombres de los Asistentes
-                  </label>
-                  {formData.names.map((name, index) => (
-                    <div key={index} className="space-y-2">
-                      <label className="text-xs text-wedding-blush font-cormorant">
-                        {index === 0 ? "Tu nombre completo" : `Acompañante ${index}`}
-                      </label>
-                      <Input
-                        value={name}
-                        onChange={(e) => handleNameChange(index, e.target.value)}
-                        className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
-                        placeholder={index === 0 ? "Tu nombre completo" : `Nombre del acompañante ${index}`}
-                        required
-                      />
-                    </div>
-                  ))}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
+              <Card className="bg-gradient-to-br from-white to-rose-50 shadow-2xl border-2 border-rose-100 p-10 rounded-2xl">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Email field */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">¿Confirmas tu asistencia?</label>
-                    <select
-                      name="response"
-                      value={formData.response}
+                    <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">Correo Electrónico de Contacto</label>
+                    <Input
+                      name="email"
+                      type="email"
+                      value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full p-3 border border-rose-200 rounded-lg focus:border-rose-400 focus:ring-2 focus:ring-rose-200 focus:outline-none font-cormorant"
+                      className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
                       required
-                    >
-                      <option value="">Por favor selecciona</option>
-                      <option value="yes">Sí, ahí estaré</option>
-                      <option value="no">Lo siento, no podré asistir</option>
-                    </select>
+                    />
                   </div>
 
-                  <div className="space-y-2">
+                  {/* Dynamic name fields */}
+                  <div className="space-y-4">
                     <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">
-                      Número de personas
-                      {invitationData.isValid && (
-                        <span className="text-xs text-wedding-blush ml-1">(máx. {invitationData.guestCount})</span>
-                      )}
+                      Nombres de los Asistentes
                     </label>
-                    <select
-                      name="guestCount"
-                      value={formData.guestCount}
-                      onChange={handleInputChange}
-                      className="w-full p-3 border border-rose-200 rounded-lg focus:border-rose-400 focus:ring-2 focus:ring-rose-200 focus:outline-none font-cormorant"
-                      required
-                    >
-                      {Array.from({ length: invitationData.isValid ? invitationData.guestCount : 5 }, (_, i) => i + 1).map(num => (
-                        <option key={num} value={num}>
-                          {num} persona{num > 1 ? 's' : ''}
-                        </option>
-                      ))}
-                    </select>
+                    {formData.names.map((name, index) => (
+                      <div key={index} className="space-y-2">
+                        <label className="text-xs text-wedding-blush font-cormorant">
+                          {index === 0 ? "Tu nombre completo" : `Acompañante ${index}`}
+                        </label>
+                        <Input
+                          value={name}
+                          onChange={(e) => handleNameChange(index, e.target.value)}
+                          className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 rounded-lg"
+                          placeholder={index === 0 ? "Tu nombre completo" : `Nombre del acompañante ${index}`}
+                          required
+                        />
+                      </div>
+                    ))}
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">Mensaje Especial (Opcional)</label>
-                  <Textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 min-h-[100px] rounded-lg font-cormorant"
-                    placeholder="Comparte tu emoción o cualquier solicitud especial..."
-                  />
-                </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">¿Confirmas tu asistencia?</label>
+                      <select
+                        name="response"
+                        value={formData.response}
+                        onChange={handleInputChange}
+                        className="w-full p-3 border border-rose-200 rounded-lg focus:border-rose-400 focus:ring-2 focus:ring-rose-200 focus:outline-none font-cormorant"
+                        required
+                      >
+                        <option value="">Por favor selecciona</option>
+                        <option value="yes">Sí, ahí estaré</option>
+                        <option value="no">Lo siento, no podré asistir</option>
+                      </select>
+                    </div>
 
-                <Button type="submit" className="w-full bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white py-4 text-lg font-cormorant tracking-wide rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                  ♥ Confirmar Asistencia Ahora ♥
-                </Button>
-                <p className="text-sm text-rose-500 text-center mt-4 font-cormorant italic">Por favor, incluye los nombres de todos los asistentes y cualquier restricción alimentaria en el mensaje</p>
-              </form>
-            </Card>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">
+                        Número de personas
+                        <span className="text-xs text-wedding-blush ml-1">(máx. {invitationData.guestCount})</span>
+                      </label>
+                      <select
+                        name="guestCount"
+                        value={formData.guestCount}
+                        onChange={handleInputChange}
+                        className="w-full p-3 border border-rose-200 rounded-lg focus:border-rose-400 focus:ring-2 focus:ring-rose-200 focus:outline-none font-cormorant"
+                        required
+                      >
+                        {Array.from({ length: invitationData.guestCount }, (_, i) => i + 1).map(num => (
+                          <option key={num} value={num}>
+                            {num} persona{num > 1 ? 's' : ''}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-rose-700 font-cormorant tracking-wide">Mensaje Especial (Opcional)</label>
+                    <Textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      className="border-rose-200 focus:border-rose-400 focus:ring-rose-200 min-h-[100px] rounded-lg font-cormorant"
+                      placeholder="Comparte tu emoción o cualquier solicitud especial..."
+                    />
+                  </div>
+
+                  <Button type="submit" className="w-full bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white py-4 text-lg font-cormorant tracking-wide rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                    ♥ Confirmar Asistencia Ahora ♥
+                  </Button>
+                  <p className="text-sm text-rose-500 text-center mt-4 font-cormorant italic">Por favor, incluye los nombres de todos los asistentes y cualquier restricción alimentaria en el mensaje</p>
+                </form>
+              </Card>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Hashtag Section */}
       <section className="py-20 relative overflow-hidden" style={{background: 'linear-gradient(to bottom right, #6B9570, #7DA080, #8AAA8D)'}}>
