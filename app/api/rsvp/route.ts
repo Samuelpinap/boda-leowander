@@ -80,6 +80,8 @@ export async function POST(request: NextRequest) {
       response: body.response,
       message: body.message || '',
       guestCount: body.guestCount,
+      possibleInvites: body.possibleInvites,
+      possibleInvitesInvited: body.possibleInvitesInvited,
       invitedBy: body.invitedBy || '',
       invitationValid: body.invitationValid || false,
       personalizedInvite: body.personalizedInvite || null,

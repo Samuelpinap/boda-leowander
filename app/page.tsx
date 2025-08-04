@@ -290,6 +290,8 @@ function WeddingInvitationContent() {
       response: formData.response,
       message: formData.message,
       guestCount: formData.guestCount,
+      possibleInvites: invitationData.guestCount - 1, // Additional guests allowed (not counting the invited person)
+      possibleInvitesInvited: invitationData.guestCount, // Total allowed (including the invited person)
       invitedBy: invitationData.invitedBy,
       invitationValid: invitationData.isValid,
       personalizedInvite: personalizedInvite.isPersonalized ? {
@@ -349,11 +351,12 @@ function WeddingInvitationContent() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     
-    // Validate guest count doesn't exceed invitation limit
+    // Handle guest count changes
     if (name === 'guestCount') {
       const count = parseInt(value, 10)
-      if (invitationData.isValid && count > invitationData.guestCount) {
-        return // Don't update if exceeds limit
+      // Allow any value between 1 and the maximum invitation limit
+      if (count < 1 || (invitationData.isValid && count > invitationData.guestCount)) {
+        return // Don't update if out of bounds
       }
       
       // Update names array when guest count changes

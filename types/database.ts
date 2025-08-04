@@ -6,6 +6,8 @@ export interface RSVPData {
   response: 'yes' | 'no'
   message?: string
   guestCount: number
+  possibleInvites?: number      // Additional guests allowed (not counting the invited person)
+  possibleInvitesInvited?: number // Total allowed (including the invited person)
   invitedBy?: string
   invitationValid: boolean
   personalizedInvite?: {
