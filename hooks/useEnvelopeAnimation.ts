@@ -99,11 +99,10 @@ export function useEnvelopeAnimation(onComplete?: () => void): EnvelopeAnimation
     console.log('Envelope clicked! Current state:', animationState)
     if (animationState === 'initial') {
       console.log('Processing click - changing to letter-visible')
-      playEnvelopeSound('open')
+      // Removed envelope sounds
       
       // Simplified animation - directly show the letter card after a short delay
       setTimeout(() => {
-        playEnvelopeSound('emerge')
         setAnimationState('letter-visible')
         console.log('Animation state changed to letter-visible')
       }, 500)
@@ -111,7 +110,7 @@ export function useEnvelopeAnimation(onComplete?: () => void): EnvelopeAnimation
   }, [animationState])
 
   const handleContinue = useCallback(() => {
-    playEnvelopeSound('confirm')
+    // Removed envelope sounds
     setAnimationState('completed')
     sessionStorage.setItem('envelope-viewed', 'true')
     setShowFloatingButton(true)

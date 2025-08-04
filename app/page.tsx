@@ -575,7 +575,7 @@ function WeddingInvitationContent() {
             <div className="grid md:grid-cols-2 gap-12 max-w-3xl mx-auto">
               <Card className="p-8 bg-gradient-to-br from-white to-rose-50 border-2 border-rose-100 hover:border-rose-200 transition-all duration-300">
                 <div className="space-y-4 text-center">
-                  <div className="text-wedding-accent text-4xl mb-4">👰🏻</div>
+                  <div className="text-wedding-accent text-4xl mb-4">👰🏻‍♀️</div>
                   <h3 className="text-2xl font-playfair text-wedding-primary font-semibold">Padres de la Novia</h3>
                   <div className="text-wedding-blush space-y-2 font-cormorant">
                     <p className="text-lg font-semibold">Ángel Luis Saint-Hilaire Pérez</p>
