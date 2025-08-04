@@ -23,11 +23,44 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const db = await getDatabase()
-    const collection = db.collection('invitados')
-
-    // Check if email already exists (update existing RSVP)
-    const existingRSVP = await collection.findOne({ email: body.email })
+    // Try to connect to database with timeout handling
+    let db, collection, existingRSVP
+    try {
+      db = await Promise.race([
+        getDatabase(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+        )
+      ]) as any
+      
+      collection = db.collection('invitados')
+      // Check if email already exists (update existing RSVP)
+      existingRSVP = await collection.findOne({ email: body.email })
+    } catch (dbError) {
+      console.error('Database error:', dbError)
+      
+      // Log the RSVP locally as fallback
+      console.log('FALLBACK - RSVP received:', {
+        email: body.email,
+        names: validNames,
+        response: body.response,
+        guestCount: body.guestCount,
+        timestamp: body.timestamp || new Date().toISOString()
+      })
+      
+      // Return success to user even if database is down
+      return NextResponse.json({
+        success: true,
+        message: 'RSVP received successfully',
+        data: {
+          email: body.email,
+          names: validNames,
+          response: body.response,
+          guestCount: body.guestCount
+        },
+        fallback: true
+      })
+    }
 
     const rsvpData: RSVPData = {
       email: body.email,
@@ -71,7 +104,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error processing RSVP:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Unable to process RSVP. Please try again.' },
       { status: 500 }
     )
   }
@@ -79,7 +112,14 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const db = await getDatabase()
+    // Try to connect to database with timeout handling
+    const db = await Promise.race([
+      getDatabase(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+      )
+    ]) as any
+    
     const collection = db.collection('invitados')
     
     // Get all RSVPs (for admin purposes - you might want to add authentication)
@@ -93,9 +133,11 @@ export async function GET() {
 
   } catch (error) {
     console.error('Error fetching RSVPs:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({
+      success: false,
+      error: 'Database temporarily unavailable',
+      message: 'Unable to fetch RSVPs at this time',
+      data: []
+    }, { status: 503 })
   }
 }

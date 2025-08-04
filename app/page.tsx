@@ -591,7 +591,7 @@ function WeddingInvitationContent() {
                   <h3 className="text-2xl font-playfair text-wedding-primary font-semibold">Padres del Novio</h3>
                   <div className="text-wedding-blush space-y-2 font-cormorant">
                     <p className="text-lg font-semibold">Leonardo Piña Luciano</p>
-                    <p className="text-lg font-semibold">Ysabel Polanco Sanchez</p>
+                    <p className="text-lg font-semibold">Ysabel Polanco Sánchez</p>
                   </div>
                   <div className="mt-4 text-wedding-accent">♥</div>
                 </div>

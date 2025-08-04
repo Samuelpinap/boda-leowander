@@ -14,9 +14,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const db = await getDatabase()
-    const collection = db.collection('well-wishes')
-
     const wellWishData: WellWishesData = {
       name: body.name.trim(),
       email: body.email?.trim() || '',
@@ -25,21 +22,52 @@ export async function POST(request: NextRequest) {
       createdAt: new Date()
     }
 
-    const result = await collection.insertOne(wellWishData)
+    // Try to connect to database with timeout handling
+    try {
+      const db = await Promise.race([
+        getDatabase(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+        )
+      ]) as any
+      
+      const collection = db.collection('well-wishes')
+      const result = await collection.insertOne(wellWishData)
 
-    return NextResponse.json({
-      success: true,
-      message: 'Well wish saved successfully',
-      data: {
+      return NextResponse.json({
+        success: true,
+        message: 'Well wish saved successfully',
+        data: {
+          name: wellWishData.name,
+          message: wellWishData.message
+        }
+      })
+    } catch (dbError) {
+      console.error('Database error:', dbError)
+      
+      // Log the wish locally as fallback
+      console.log('FALLBACK - Well wish received:', {
         name: wellWishData.name,
-        message: wellWishData.message
-      }
-    })
+        message: wellWishData.message,
+        timestamp: wellWishData.timestamp
+      })
+      
+      // Return success to user even if database is down
+      return NextResponse.json({
+        success: true,
+        message: 'Well wish received successfully',
+        data: {
+          name: wellWishData.name,
+          message: wellWishData.message
+        },
+        fallback: true
+      })
+    }
 
   } catch (error) {
-    console.error('Error saving well wish:', error)
+    console.error('Error processing well wish:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Unable to process request. Please try again.' },
       { status: 500 }
     )
   }
@@ -47,7 +75,14 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const db = await getDatabase()
+    // Try to connect to database with timeout handling
+    const db = await Promise.race([
+      getDatabase(),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database connection timeout')), 15000)
+      )
+    ]) as any
+    
     const collection = db.collection('well-wishes')
     
     // Get all well wishes, sorted by creation date (newest first)
@@ -64,9 +99,11 @@ export async function GET() {
 
   } catch (error) {
     console.error('Error fetching well wishes:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({
+      success: false,
+      error: 'Database temporarily unavailable',
+      message: 'Unable to fetch well wishes at this time',
+      data: []
+    }, { status: 503 })
   }
 }

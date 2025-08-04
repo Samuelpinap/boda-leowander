@@ -6,10 +6,15 @@ if (!process.env.MONGODB_URI) {
 
 const uri: string = process.env.MONGODB_URI
 const options = {
-  serverSelectionTimeoutMS: 5000,
+  serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 45000,
+  connectTimeoutMS: 30000,
   retryWrites: true,
-  w: 'majority'
+  w: 'majority',
+  maxPoolSize: 10,
+  minPoolSize: 5,
+  maxIdleTimeMS: 30000,
+  waitQueueTimeoutMS: 30000
 }
 
 let client: MongoClient
