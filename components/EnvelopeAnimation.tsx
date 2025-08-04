@@ -106,7 +106,7 @@ export default function EnvelopeAnimation({ onComplete, children }: EnvelopeAnim
               <div className={`${isMobile ? 'mb-4' : 'mb-6'}`}>
                 <div className={`text-wedding-accent ${isMobile ? 'text-lg' : 'text-xl'} ${isMobile ? 'mb-3' : 'mb-4'}`}>✦ ❤ ✦</div>
                 <h3 className={`${isMobile ? 'text-xl' : 'text-2xl'} font-dancing text-wedding-primary ${isMobile ? 'mb-3' : 'mb-4'}`}>
-                  ¡Querid{personalizedData?.gender === 'a' ? 'a' : 'o'} {personalizedData?.name || 'Invitado'}!
+                  ¡Querid{personalizedData?.gender === 'a' ? 'a' : personalizedData?.gender === 'o' ? 'o' : 'o/a'} {personalizedData?.name || 'Invitado/a'}!
                 </h3>
               </div>
 
