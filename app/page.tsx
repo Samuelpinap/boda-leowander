@@ -652,16 +652,6 @@ function WeddingInvitationContent() {
              
               
 
-              {/* What NOT to wear */}
-              <Card className="p-6 bg-gradient-to-br from-rose-50 to-white border-2 border-rose-100 max-w-2xl mx-auto mb-6">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="text-red-500 text-3xl mr-3">🚫</div>
-                  <h5 className="text-lg font-playfair text-wedding-primary font-semibold text-center">NO asistir de:</h5>
-                </div>
-                <p className="text-red-600 font-cormorant text-center">
-                  rojo, blanco, beige o estampados
-                </p>
-              </Card>
 
               {/* Pinterest Link */}
               <div className="text-center">
@@ -676,6 +666,16 @@ function WeddingInvitationContent() {
               </div>
             </div>
 
+              {/* What NOT to wear */}
+              <Card className="p-6 bg-gradient-to-br from-rose-50 to-white border-2 border-rose-100 max-w-2xl mx-auto mb-6">
+                <div className="flex items-center justify-center mb-4">
+                  <div className="text-red-500 text-3xl mr-3">🚫</div>
+                  <h5 className="text-lg font-playfair text-wedding-primary font-semibold text-center">NO asistir de:</h5>
+                </div>
+                <p className="text-red-600 font-cormorant text-center">
+                  rojo, blanco, beige o estampados
+                </p>
+              </Card>
             {/* Accommodation Section */}
             <div className="max-w-5xl mx-auto">
               <div className="mb-8">
