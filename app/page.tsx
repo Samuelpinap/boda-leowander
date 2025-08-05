@@ -1105,7 +1105,7 @@ function WeddingInvitationContent() {
                 
                 <div className="mb-6 p-4 bg-wedding-primary/10 rounded-lg border border-wedding-accent/20">
                   <p className="text-wedding-primary font-cormorant text-lg">
-                    ¡Hola! Has sido invitado/a por <span className="font-semibold capitalize">{invitationData.invitedBy}</span>
+                    ¡Hola! Has sido invitado/a por <span className="font-semibold">Sarah y Leowander</span>
                   </p>
                   <p className="text-wedding-blush font-cormorant text-sm mt-1">
                     Invitación para {invitationData.guestCount} persona{invitationData.guestCount > 1 ? 's' : ''}
