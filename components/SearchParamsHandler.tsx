@@ -56,8 +56,8 @@ export default function SearchParamsHandler({
           const [, inviterName, guestCountStr] = match
           const guestCount = parseInt(guestCountStr, 10)
           
-          // Validate guest count (1-5)
-          if (guestCount >= 1 && guestCount <= 5) {
+          // Validate guest count (1-7)
+          if (guestCount >= 1 && guestCount <= 7) {
             onInvitationUpdate({
               invitedBy: inviterName,
               guestCount: guestCount,
