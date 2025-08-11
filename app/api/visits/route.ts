@@ -16,9 +16,24 @@ export async function POST(request: NextRequest) {
 
     // Get current timestamp
     const timestamp = new Date()
-
-    // Find existing visitor record or create new one
+    
+    // Find existing visitor record
     const existingVisitor = await collection.findOne({ guestId })
+    
+    // Check for recent visit to prevent rapid duplicates
+    if (existingVisitor && existingVisitor.lastVisit) {
+      const lastVisitTime = new Date(existingVisitor.lastVisit).getTime()
+      const currentTime = timestamp.getTime()
+      const timeDifference = currentTime - lastVisitTime
+      
+      // If last visit was less than 30 seconds ago, skip tracking
+      if (timeDifference < 30000) {
+        return NextResponse.json({ 
+          success: false, 
+          message: 'Visit recently tracked' 
+        })
+      }
+    }
 
     if (existingVisitor) {
       // Increment visit count and add new timestamp
