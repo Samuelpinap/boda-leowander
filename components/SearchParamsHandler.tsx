@@ -47,26 +47,6 @@ export default function SearchParamsHandler({
           gender: genderParam === 'a' || genderParam === 'o' ? genderParam : '',
           isPersonalized: true
         })
-        
-        // Track the visit
-        const trackVisit = async () => {
-          try {
-            await fetch('/api/visits', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                guestId: inviteParam.toLowerCase().replace(/\s+/g, '-'),
-                guestName: capitalizedName
-              })
-            })
-          } catch (error) {
-            console.error('Failed to track visit:', error)
-          }
-        }
-        
-        trackVisit()
       }
       
       for (const [key, value] of params) {
