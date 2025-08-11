@@ -25,10 +25,6 @@ export default function SearchParamsHandler({
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    // Check if we've already tracked this visit in this session
-    const sessionKey = 'visit_tracked_' + searchParams.get('invite')
-    const hasTracked = sessionStorage.getItem(sessionKey)
-    
     const parseInvitation = () => {
       const params = Array.from(searchParams.entries())
       let foundValidInvitation = false
@@ -52,29 +48,25 @@ export default function SearchParamsHandler({
           isPersonalized: true
         })
         
-        // Track the visit only once per session
-        if (!hasTracked && inviteParam) {
-          const trackVisit = async () => {
-            try {
-              await fetch('/api/visits', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  guestId: inviteParam.toLowerCase().replace(/\s+/g, '-'),
-                  guestName: capitalizedName
-                })
+        // Track the visit
+        const trackVisit = async () => {
+          try {
+            await fetch('/api/visits', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                guestId: inviteParam.toLowerCase().replace(/\s+/g, '-'),
+                guestName: capitalizedName
               })
-              // Mark as tracked for this session
-              sessionStorage.setItem(sessionKey, 'true')
-            } catch (error) {
-              console.error('Failed to track visit:', error)
-            }
+            })
+          } catch (error) {
+            console.error('Failed to track visit:', error)
           }
-          
-          trackVisit()
         }
+        
+        trackVisit()
       }
       
       for (const [key, value] of params) {
