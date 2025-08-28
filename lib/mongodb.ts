@@ -6,20 +6,23 @@ if (!process.env.MONGODB_URI) {
 
 const uri: string = process.env.MONGODB_URI
 const options = {
-  serverSelectionTimeoutMS: 5000, // Further reduced for faster failures
-  socketTimeoutMS: 10000, // Reduced timeout
-  connectTimeoutMS: 5000, // Faster connection timeout
+  serverSelectionTimeoutMS: 30000, // Increased timeout for initial connection
+  socketTimeoutMS: 30000, // Increased timeout for operations
+  connectTimeoutMS: 30000, // Increased connection timeout
   retryWrites: true,
-  w: 'majority',
-  maxPoolSize: 2, // Smaller pool for free tier
-  minPoolSize: 0, // No minimum connections for free tier
-  maxIdleTimeMS: 5000, // Shorter idle time
-  waitQueueTimeoutMS: 5000, // Faster queue timeout
-  // Optimizations for free tier
-  heartbeatFrequencyMS: 10000, // Less frequent heartbeats
-  serverMonitoringMode: 'poll', // More efficient for free tier
-  compressors: ['zlib'], // Enable compression
-  zlibCompressionLevel: 6
+  w: 'majority' as const,
+  maxPoolSize: 5, // Slightly larger pool
+  minPoolSize: 1, // Keep at least 1 connection open
+  maxIdleTimeMS: 30000, // Longer idle time to maintain connections
+  waitQueueTimeoutMS: 10000, // Reasonable queue timeout
+  // Connection stability optimizations
+  heartbeatFrequencyMS: 30000, // Less frequent heartbeats to reduce load
+  serverMonitoringMode: 'auto' as const, // Let MongoDB decide the best mode
+  compressors: ['zlib' as const], // Enable compression
+  zlibCompressionLevel: 6,
+  // Retry configuration
+  retryReads: true,
+  readPreference: 'primary' as const
 }
 
 let client: MongoClient
@@ -53,26 +56,45 @@ export default clientPromise
 
 export async function getDatabase(): Promise<Db> {
   try {
+    console.log('Attempting to connect to MongoDB...')
     const client = await clientPromise
     
-    // Test the connection
+    // Test the connection with a simple ping
+    console.log('Testing MongoDB connection with ping...')
     await client.db('admin').command({ ping: 1 })
+    console.log('MongoDB connection successful')
     
     return client.db('leowanderboda')
   } catch (error) {
     console.error('MongoDB connection failed:', error)
     
+    // Log more details about the error
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack?.split('\n').slice(0, 3)
+      })
+    }
+    
     // Re-create the connection promise for next attempt
+    console.log('Recreating MongoDB connection promise...')
     if (process.env.NODE_ENV === 'development') {
       let globalWithMongo = global as typeof globalThis & {
         _mongoClientPromise?: Promise<MongoClient>
       }
       const newClient = new MongoClient(uri, options)
-      globalWithMongo._mongoClientPromise = newClient.connect()
+      globalWithMongo._mongoClientPromise = newClient.connect().catch(err => {
+        console.error('MongoDB reconnection failed:', err)
+        throw err
+      })
       clientPromise = globalWithMongo._mongoClientPromise
     } else {
       const newClient = new MongoClient(uri, options)
-      clientPromise = newClient.connect()
+      clientPromise = newClient.connect().catch(err => {
+        console.error('MongoDB reconnection failed:', err)
+        throw err
+      })
     }
     
     throw error
