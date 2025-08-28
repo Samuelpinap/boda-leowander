@@ -53,6 +53,7 @@ export async function GET(request: NextRequest) {
 
     // Generate demo timeline data
     const rsvpTimeline = []
+    const visitTimeline = []
     const startDate = new Date()
     startDate.setDate(startDate.getDate() - 30)
     
@@ -62,6 +63,10 @@ export async function GET(request: NextRequest) {
       rsvpTimeline.push({
         date: date.toISOString().split('T')[0],
         responses: Math.floor(Math.random() * 5) + 1
+      })
+      visitTimeline.push({
+        date: date.toISOString().split('T')[0],
+        visits: Math.floor(Math.random() * 8) + 2
       })
     }
 
@@ -76,14 +81,27 @@ export async function GET(request: NextRequest) {
         wellWishesCount: 23,
         availableSpots,
         totalPossibleInvites: 180,
-        validInvitations: 42
+        validInvitations: 42,
+        // Demo visit tracking metrics
+        totalVisits: 87,
+        uniqueVisitors: 65,
+        visitsToday: 12,
+        conversionRate: 38
       },
       charts: {
         rsvpTimeline,
+        visitTimeline,
         statusBreakdown: [
           { name: 'Attending', value: demoStats.confirmedGuests, color: '#22c55e' },
           { name: 'Declined', value: demoStats.declined, color: '#ef4444' },
           { name: 'Pending', value: demoStats.pending, color: '#f59e0b' }
+        ],
+        visitsByInviter: [
+          { inviter: 'leowander', visits: 25 },
+          { inviter: 'sarah', visits: 18 },
+          { inviter: 'maria', visits: 15 },
+          { inviter: 'carlos', visits: 12 },
+          { inviter: 'ana', visits: 8 }
         ]
       },
       recent: {

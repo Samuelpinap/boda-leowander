@@ -105,6 +105,65 @@ export async function GET(request: NextRequest) {
     // Get well wishes count
     const wellWishesCount = await db.collection('well-wishes').countDocuments()
 
+    // Get visit tracking statistics
+    const visitStats = await db.collection('visit-tracking').aggregate([
+      {
+        $group: {
+          _id: null,
+          totalVisits: { $sum: 1 },
+          uniqueVisitors: { $addToSet: '$sessionId' },
+          visitsToday: {
+            $sum: {
+              $cond: [
+                {
+                  $gte: [
+                    '$visitedAt',
+                    new Date(new Date().setHours(0, 0, 0, 0))
+                  ]
+                },
+                1,
+                0
+              ]
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          totalVisits: 1,
+          uniqueVisitors: { $size: '$uniqueVisitors' },
+          visitsToday: 1
+        }
+      }
+    ]).toArray()
+
+    // Get visit timeline (visits over time)
+    const visitTimeline = await db.collection('visit-tracking').aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%Y-%m-%d',
+              date: '$visitedAt'
+            }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]).toArray()
+
+    // Get visits by inviter
+    const visitsByInviter = await db.collection('visit-tracking').aggregate([
+      {
+        $group: {
+          _id: '$invitedBy',
+          visits: { $sum: 1 }
+        }
+      },
+      { $sort: { visits: -1 } }
+    ]).toArray()
+
     // Get dietary restrictions summary (counting messages)
     const dietaryRestrictions = await db.collection('invitados').aggregate([
       { $match: { 
@@ -159,8 +218,29 @@ export async function GET(request: NextRequest) {
       unusedSpots: 0
     }
 
+    const visits = visitStats[0] || {
+      totalVisits: 0,
+      uniqueVisitors: 0,
+      visitsToday: 0
+    }
+
     const responseRate = stats.totalInvitations > 0 
       ? Math.round((stats.responded / stats.totalInvitations) * 100) 
+      : 0
+
+    // Get RSVPs from visit tracking start date onwards for conversion rate calculation
+    const visitTrackingStartDate = new Date('2025-08-28T00:00:00.000Z')
+    const rsvpsFromTrackingStart = await db.collection('invitados').countDocuments({
+      response: { $in: ['yes', 'no'] },
+      $or: [
+        { createdAt: { $gte: visitTrackingStartDate } },
+        { timestamp: { $gte: visitTrackingStartDate } }
+      ]
+    })
+
+    // Calculate conversion rate (RSVPs from tracking start vs total visits)
+    const conversionRate = visits.totalVisits > 0 
+      ? Math.round((rsvpsFromTrackingStart / visits.totalVisits) * 100) 
       : 0
 
     // Available spots are the unused invitation capacity
@@ -177,18 +257,31 @@ export async function GET(request: NextRequest) {
         wellWishesCount,
         availableSpots,
         totalPossibleInvites: stats.totalPossibleInvites,
-        validInvitations: stats.validInvitations
+        validInvitations: stats.validInvitations,
+        // Visit tracking metrics
+        totalVisits: visits.totalVisits,
+        uniqueVisitors: visits.uniqueVisitors,
+        visitsToday: visits.visitsToday,
+        conversionRate
       },
       charts: {
         rsvpTimeline: rsvpTimeline.map(item => ({
           date: item._id,
           responses: item.count
         })),
+        visitTimeline: visitTimeline.map(item => ({
+          date: item._id,
+          visits: item.count
+        })),
         statusBreakdown: [
           { name: 'Attending', value: stats.confirmedGuests, color: '#22c55e' },
           { name: 'Declined', value: stats.declined, color: '#ef4444' },
           { name: 'Pending', value: stats.pending, color: '#f59e0b' }
-        ]
+        ],
+        visitsByInviter: visitsByInviter.map(item => ({
+          inviter: item._id,
+          visits: item.visits
+        }))
       },
       recent: {
         rsvps: recentRSVPs.map(rsvp => ({

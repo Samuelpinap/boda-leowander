@@ -20,7 +20,10 @@ import {
   Star,
   Coffee,
   Shield,
-  Gift
+  Gift,
+  Eye,
+  MousePointerClick,
+  BarChart3
 } from 'lucide-react'
 import { toast, Toaster } from 'react-hot-toast'
 
@@ -30,6 +33,7 @@ import ModernRSVPTable from '@/components/dashboard/ModernRSVPTable'
 import ModernWellWishesGrid from '@/components/dashboard/ModernWellWishesGrid'
 import ModernAnalyticsCharts from '@/components/dashboard/ModernAnalyticsCharts'
 import ModernQuickActions from '@/components/dashboard/ModernQuickActions'
+import ModernVisitTrackingTable from '@/components/dashboard/ModernVisitTrackingTable'
 
 interface DashboardStats {
   metrics: {
@@ -43,10 +47,16 @@ interface DashboardStats {
     availableSpots: number
     totalPossibleInvites: number
     validInvitations: number
+    totalVisits: number
+    uniqueVisitors: number
+    visitsToday: number
+    conversionRate: number
   }
   charts: {
     rsvpTimeline: Array<{ date: string; responses: number }>
+    visitTimeline: Array<{ date: string; visits: number }>
     statusBreakdown: Array<{ name: string; value: number; color: string }>
+    visitsByInviter: Array<{ inviter: string; visits: number }>
   }
   recent: {
     rsvps: any[]
@@ -369,11 +379,35 @@ export default function DashboardPage() {
                 gradient="from-violet-500 to-purple-600"
                 delay="0.9s"
               />
+              <ModernStatsCard
+                title="Total Visits"
+                value={stats.metrics.totalVisits}
+                icon={Eye}
+                description="Invitation links clicked"
+                gradient="from-amber-500 to-orange-600"
+                delay="1.0s"
+              />
+              <ModernStatsCard
+                title="Unique Visitors"
+                value={stats.metrics.uniqueVisitors}
+                icon={MousePointerClick}
+                description="Different people who visited"
+                gradient="from-teal-500 to-cyan-600"
+                delay="1.1s"
+              />
+              <ModernStatsCard
+                title="Conversion Rate"
+                value={`${stats.metrics.conversionRate}%`}
+                icon={BarChart3}
+                description="Visits that became RSVPs"
+                gradient="from-emerald-500 to-green-600"
+                delay="1.2s"
+              />
             </div>
 
             {/* Modern Tabs */}
             <Tabs defaultValue="rsvps" className="space-y-8">
-              <TabsList className="grid w-full grid-cols-3 bg-white/60 backdrop-blur p-2 rounded-2xl shadow-xl border border-white/20">
+              <TabsList className="grid w-full grid-cols-4 bg-white/60 backdrop-blur p-2 rounded-2xl shadow-xl border border-white/20">
                 <TabsTrigger 
                   value="rsvps" 
                   className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white transition-all duration-300"
@@ -401,6 +435,16 @@ export default function DashboardPage() {
                   <TrendingUp className="h-4 w-4 mr-2" />
                   Analytics
                 </TabsTrigger>
+                <TabsTrigger 
+                  value="tracking"
+                  className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white transition-all duration-300"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  Visit Tracking
+                  <Badge variant="secondary" className="ml-2 bg-white/20">
+                    {stats.metrics.totalVisits}
+                  </Badge>
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="rsvps" className="animate-in slide-in-from-right-10 duration-500">
@@ -413,6 +457,10 @@ export default function DashboardPage() {
 
               <TabsContent value="analytics" className="animate-in slide-in-from-right-10 duration-500">
                 <ModernAnalyticsCharts data={stats.charts} />
+              </TabsContent>
+
+              <TabsContent value="tracking" className="animate-in slide-in-from-right-10 duration-500">
+                <ModernVisitTrackingTable token={token} />
               </TabsContent>
             </Tabs>
           </>

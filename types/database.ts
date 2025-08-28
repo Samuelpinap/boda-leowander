@@ -38,3 +38,17 @@ export interface WellWishesData {
   createdAt?: Date
   updatedAt?: Date
 }
+
+export interface VisitTrackingData {
+  _id?: string
+  invitedBy: string           // Who sent the invitation (from URL params like "leowander-2")
+  invitedPerson?: string      // Name from personalized invite (from "invite" param)
+  guestLimit: number          // Number from invitation params
+  personalizedGender?: string // Gender from "g" param
+  visitedAt: Date
+  ipAddressHash?: string      // Hashed IP for privacy
+  userAgent?: string          // Browser info
+  referrer?: string           // Where they came from
+  sessionId: string           // Unique session identifier
+  createdAt?: Date
+}
