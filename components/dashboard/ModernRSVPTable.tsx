@@ -21,17 +21,6 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -40,7 +29,6 @@ import {
 } from '@/components/ui/dialog'
 import { 
   Search, 
-  Trash2, 
   Users, 
   Calendar, 
   ChevronLeft, 
@@ -157,31 +145,6 @@ export default function ModernRSVPTable({ token, isDemoMode = false }: ModernRSV
     fetchRSVPs()
   }, [search, statusFilter, currentPage, token])
 
-  const handleDelete = async (rsvpId: string, invitedPerson: string) => {
-    try {
-      const response = await fetch(`/api/dashboard/rsvps?id=${rsvpId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-
-      if (response.ok) {
-        toast.success(`✨ Deleted RSVP for ${invitedPerson}`, {
-          style: {
-            background: 'linear-gradient(135deg, #10ac84 0%, #1dd1a1 100%)',
-            color: 'white',
-          },
-        })
-        fetchRSVPs()
-      } else {
-        toast.error('Failed to delete RSVP')
-      }
-    } catch (error) {
-      toast.error('Error deleting RSVP')
-      console.error(error)
-    }
-  }
 
   const getStatusBadge = (response: 'yes' | 'no' | null) => {
     switch (response) {
@@ -258,7 +221,7 @@ export default function ModernRSVPTable({ token, isDemoMode = false }: ModernRSV
           <div className="flex items-center space-x-2">
             <Users className="h-5 w-5 text-purple-600" />
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              RSVP Management
+              Your Wedding Guests
             </span>
           </div>
           <Badge className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
@@ -305,21 +268,18 @@ export default function ModernRSVPTable({ token, isDemoMode = false }: ModernRSV
                   <TableHead className="hidden md:table-cell text-purple-700 font-semibold">Guest Limit</TableHead>
                   <TableHead className="hidden lg:table-cell text-purple-700 font-semibold">Invited By</TableHead>
                   <TableHead className="hidden xl:table-cell text-purple-700 font-semibold">Message</TableHead>
-                  <TableHead className="w-20 text-purple-700 font-semibold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {rsvps.map((rsvp, index) => (
                   <TableRow 
                     key={rsvp._id} 
-                    className="hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-pink-50/50 transition-all duration-300 border-purple-100/50"
+                    className="hover:bg-gradient-to-r hover:from-purple-50/50 hover:to-pink-50/50 transition-all duration-300 border-purple-100/50 cursor-pointer"
                     style={{ animationDelay: `${index * 0.1}s` }}
+                    onClick={() => handleRowClick(rsvp)}
                   >
                     <TableCell>
-                      <div 
-                        className="space-y-1 cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={() => handleRowClick(rsvp)}
-                      >
+                      <div className="space-y-1">
                         <div className="font-medium text-gray-900 flex items-center">
                           <Heart className="h-3 w-3 mr-2 text-pink-400" />
                           {rsvp.invitedPerson}
@@ -373,37 +333,6 @@ export default function ModernRSVPTable({ token, isDemoMode = false }: ModernRSV
                       <div className="max-w-[200px] truncate text-sm text-gray-600" title={rsvp.message}>
                         {rsvp.message || <span className="text-gray-400">No message</span>}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors duration-300"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-white/95 backdrop-blur">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle className="text-red-600">Delete RSVP</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Are you sure you want to delete the RSVP for <strong>{rsvp.invitedPerson}</strong>? 
-                              This action cannot be undone.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(rsvp._id, rsvp.invitedPerson)}
-                              className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700"
-                            >
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -466,10 +395,10 @@ export default function ModernRSVPTable({ token, isDemoMode = false }: ModernRSV
           <DialogContent className="max-w-2xl bg-white/95 backdrop-blur-xl">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                RSVP Details
+                Guest Details
               </DialogTitle>
               <DialogDescription>
-                Complete information for this guest's RSVP
+                Complete information for this special guest joining your celebration
               </DialogDescription>
             </DialogHeader>
             

@@ -101,7 +101,7 @@ export default function ModernWellWishesGrid({ token }: ModernWellWishesGridProp
           <CardTitle className="flex items-center space-x-2">
             <Heart className="h-5 w-5 text-pink-600" />
             <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-              Well Wishes
+              Messages of Love for You
             </span>
           </CardTitle>
         </CardHeader>
@@ -148,10 +148,10 @@ export default function ModernWellWishesGrid({ token }: ModernWellWishesGridProp
           <div className="text-center py-16">
             <div className="text-6xl mb-4">💕</div>
             <h3 className="text-xl font-semibold text-gray-600 mb-2">
-              No Well Wishes Yet
+              No Messages Yet
             </h3>
             <p className="text-gray-500">
-              Beautiful messages from your guests will appear here once they start sending love.
+              Loving messages from your guests will appear here as they share their joy for your special day.
             </p>
           </div>
         </CardContent>
@@ -166,7 +166,7 @@ export default function ModernWellWishesGrid({ token }: ModernWellWishesGridProp
           <div className="flex items-center space-x-2">
             <Heart className="h-5 w-5 text-pink-600" />
             <span className="bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-              Well Wishes
+              Messages of Love for You
             </span>
             <Sparkles className="h-4 w-4 text-yellow-500 animate-pulse" />
           </div>

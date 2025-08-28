@@ -223,7 +223,7 @@ export default function DashboardPage() {
               <div>
                 <div className="flex items-center space-x-3">
                   <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                    Wedding Dashboard
+                    Welcome back, Leowander & Sarah! 💕
                   </h1>
                   {isDemoMode && (
                     <Badge className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0 animate-pulse">
@@ -236,7 +236,7 @@ export default function DashboardPage() {
                   <div className="flex items-center space-x-3 text-gray-600 mt-1">
                     <Calendar className="h-4 w-4" />
                     <span className={`font-medium bg-gradient-to-r ${getDaysUntilWeddingColor(stats.metrics.daysUntilWedding)} bg-clip-text text-transparent`}>
-                      {getDaysUntilWeddingText(stats.metrics.daysUntilWedding)} until the big day
+                      {getDaysUntilWeddingText(stats.metrics.daysUntilWedding)} until your special day
                     </span>
                     <span className="text-gray-500 text-sm">• November 29, 2025 at 3:00 PM</span>
                     <Star className="h-4 w-4 text-yellow-500 animate-spin" style={{ animationDuration: '3s' }} />
@@ -293,7 +293,7 @@ export default function DashboardPage() {
                 title="Total Invitations"
                 value={stats.metrics.totalInvitations}
                 icon={Users}
-                description="Beautiful invites sent"
+                description="Your lovely invites sent"
                 gradient="from-blue-500 to-purple-600"
                 delay="0s"
               />
@@ -301,7 +301,7 @@ export default function DashboardPage() {
                 title="Confirmed Guests"
                 value={stats.metrics.confirmedGuests}
                 icon={UserCheck}
-                description="Ready to celebrate"
+                description="Ready to celebrate with you"
                 gradient="from-green-500 to-teal-600"
                 delay="0.1s"
               />
@@ -341,7 +341,7 @@ export default function DashboardPage() {
                 title="Well Wishes"
                 value={stats.metrics.wellWishesCount}
                 icon={Heart}
-                description="Love messages"
+                description="Messages full of love for you"
                 gradient="from-pink-500 to-rose-600"
                 delay="0.6s"
               />
@@ -373,13 +373,13 @@ export default function DashboardPage() {
 
             {/* Modern Tabs */}
             <Tabs defaultValue="rsvps" className="space-y-8">
-              <TabsList className="grid w-full grid-cols-4 bg-white/60 backdrop-blur p-2 rounded-2xl shadow-xl border border-white/20">
+              <TabsList className="grid w-full grid-cols-3 bg-white/60 backdrop-blur p-2 rounded-2xl shadow-xl border border-white/20">
                 <TabsTrigger 
                   value="rsvps" 
                   className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white transition-all duration-300"
                 >
                   <Users className="h-4 w-4 mr-2" />
-                  RSVP Management
+                  Your Guests
                   <Badge variant="secondary" className="ml-2 bg-white/20">
                     {stats.metrics.totalInvitations}
                   </Badge>
@@ -389,7 +389,7 @@ export default function DashboardPage() {
                   className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-rose-500 data-[state=active]:text-white transition-all duration-300"
                 >
                   <Heart className="h-4 w-4 mr-2" />
-                  Well Wishes
+                  Love Messages
                   <Badge variant="secondary" className="ml-2 bg-white/20">
                     {stats.metrics.wellWishesCount}
                   </Badge>
@@ -400,13 +400,6 @@ export default function DashboardPage() {
                 >
                   <TrendingUp className="h-4 w-4 mr-2" />
                   Analytics
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="actions"
-                  className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-teal-500 data-[state=active]:text-white transition-all duration-300"
-                >
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Quick Actions
                 </TabsTrigger>
               </TabsList>
 
@@ -420,10 +413,6 @@ export default function DashboardPage() {
 
               <TabsContent value="analytics" className="animate-in slide-in-from-right-10 duration-500">
                 <ModernAnalyticsCharts data={stats.charts} />
-              </TabsContent>
-
-              <TabsContent value="actions" className="animate-in slide-in-from-right-10 duration-500">
-                <ModernQuickActions token={token} onRefresh={fetchStats} />
               </TabsContent>
             </Tabs>
           </>
