@@ -741,7 +741,7 @@ function WeddingInvitationContent() {
                   <div className="text-wedding-accent text-4xl mb-4">⛪</div>
                   <h3 className="text-2xl font-playfair text-wedding-primary font-semibold">Ceremonia</h3>
                   <div className="text-wedding-blush space-y-3 font-cormorant">
-                    <p className="font-medium text-xl">3:00 PM</p>
+                    <p className="font-medium text-xl">2:30 PM</p>
                     <p className="text-lg font-semibold">Parroquia De los Santos Médicos</p>
                     <p>Cosme y Damián</p>
                     <p>Santiago, República Dominicana</p>
