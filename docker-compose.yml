@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # Next.js Application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/wedding-invitation
+      - DASHBOARD_PASSWORD=${DASHBOARD_PASSWORD:-admin123}
+      - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-this}
+      - WEDDING_DATE=${WEDDING_DATE:-2024-12-31}
+      - MAX_GUESTS=${MAX_GUESTS:-150}
+    depends_on:
+      - mongo
+    restart: unless-stopped
+    networks:
+      - wedding-network
+
+  # MongoDB Database (for local testing)
+  mongo:
+    image: mongo:7-jammy
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+    networks:
+      - wedding-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo-data:
+    driver: local
+
+networks:
+  wedding-network:
+    driver: bridge
