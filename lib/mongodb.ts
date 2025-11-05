@@ -14,7 +14,7 @@ const options = {
   heartbeatFrequencyMS: 30000, // Less frequent heartbeats to reduce load
   serverMonitoringMode: 'auto' as const, // Let MongoDB decide the best mode
   compressors: ['zlib' as const], // Enable compression
-  zlibCompressionLevel: 6,
+  zlibCompressionLevel: 6 as const,
   // Retry configuration
   retryReads: true,
   readPreference: 'primary' as const
