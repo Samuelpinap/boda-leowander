@@ -74,7 +74,7 @@ export async function getDatabase(): Promise<Db> {
     await client.db('admin').command({ ping: 1 })
     console.log('MongoDB connection successful')
 
-    return client.db('leowanderboda')
+    return client.db('bodatest')
   } catch (error) {
     console.error('MongoDB connection failed:', error)
 

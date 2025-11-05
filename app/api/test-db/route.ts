@@ -24,7 +24,7 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       message: 'MongoDB connection successful',
-      database: 'leowanderboda',
+      database: 'bodatest',
       collections: collections.map(col => col.name),
       testInsert: insertResult.acknowledged
     })
