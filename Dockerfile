@@ -45,38 +45,31 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Install curl for healthcheck (more reliable than wget for this use case)
-RUN apk add --no-cache curl
+# Install wget for healthcheck
+RUN apk add --no-cache wget
 
 # Create non-root user for security
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
-
-# Copy startup script for debugging
-COPY start.sh ./start.sh
-RUN chmod +x ./start.sh
 
 # Copy necessary files from builder
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Fix ownership of startup script
-RUN chown nextjs:nodejs ./start.sh
-
 # Switch to non-root user
 USER nextjs
 
-# Expose port (default, but Coolify may use different port via PORT env var)
+# Expose port (Coolify will map this)
 EXPOSE 3000
 
-# Default values - Coolify will override these
+# Support PORT environment variable from Coolify
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Health check that respects PORT environment variable
-HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 \
-  CMD curl -f http://localhost:${PORT:-3000}/api/health || exit 1
+# Health check using wget
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
 
-# Start Next.js server with startup script for debugging
-CMD ["./start.sh"]
+# Start Next.js server
+CMD ["node", "server.js"]
