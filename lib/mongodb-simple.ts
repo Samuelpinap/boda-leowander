@@ -32,7 +32,7 @@ export async function connectToDatabase(): Promise<{ client: MongoClient; db: Db
     await client.db('admin').command({ ping: 1 })
     console.log('Connected to MongoDB successfully')
     
-    db = client.db('bodatest')
+    db = client.db('leowanderboda')
     return { client, db }
   } catch (error) {
     console.error('MongoDB connection error:', error)
